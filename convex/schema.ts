@@ -7,8 +7,14 @@ const applicationTables = {
     name: v.string(),
     breed: v.string(),
     age: v.number(),
-    height: v.number(), // in hands
+    height: v.number(),
+    gender: v.string(),
+    color: v.string(),
+    sourceUrl: v.optional(v.string()),
+    sourceName: v.optional(v.string()),
+    purpose: v.string(),
     price: v.number(),
+    currency: v.string(),
     description: v.string(),
     location: v.string(),
     imageUrl: v.optional(v.string()),
@@ -33,8 +39,7 @@ const applicationTables = {
     participantIds: v.array(v.id("users")),
     horseId: v.id("horses"),
     lastMessageTime: v.optional(v.number()),
-  })
-    .index("by_horse", ["horseId"]),
+  }).index("by_horse", ["horseId"]),
 
   messages: defineTable({
     conversationId: v.id("conversations"),
