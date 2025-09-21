@@ -17,13 +17,14 @@ export const getUserFavorites = query({
       favorites.map(async (favorite) => {
         const horse = await ctx.db.get(favorite.horseId);
         if (!horse) return null;
-        
+
+        if (!horse.ownerId) return { ...horse, owner: null };
         const owner = await ctx.db.get(horse.ownerId);
         return {
           ...horse,
           owner: owner ? { name: owner.name, email: owner.email } : null,
         };
-      })
+      }),
     );
 
     return horses.filter(Boolean);
@@ -38,8 +39,8 @@ export const isFavorite = query({
 
     const favorite = await ctx.db
       .query("favorites")
-      .withIndex("by_user_and_horse", (q) => 
-        q.eq("userId", userId).eq("horseId", args.horseId)
+      .withIndex("by_user_and_horse", (q) =>
+        q.eq("userId", userId).eq("horseId", args.horseId),
       )
       .unique();
 
@@ -57,8 +58,8 @@ export const toggle = mutation({
 
     const existing = await ctx.db
       .query("favorites")
-      .withIndex("by_user_and_horse", (q) => 
-        q.eq("userId", userId).eq("horseId", args.horseId)
+      .withIndex("by_user_and_horse", (q) =>
+        q.eq("userId", userId).eq("horseId", args.horseId),
       )
       .unique();
 
