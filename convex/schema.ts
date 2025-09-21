@@ -16,16 +16,60 @@ const applicationTables = {
     price: v.number(),
     currency: v.string(),
     description: v.string(),
-    location: v.string(),
     imageUrl: v.optional(v.string()),
     ownerId: v.id("users"),
     isAvailable: v.boolean(),
+    hasTUV: v.boolean(),
+    sourceListingId: v.optional(v.string()),
+    scrapedAt: v.number(),
+    lastSeenAt: v.number(),
+    scrapeStatus: v.union(
+      v.literal("active"),
+      v.literal("expired"),
+      v.literal("removed"),
+      v.literal("sold"),
+    ),
+    location: v.string(),
+    country: v.string(),
+    region: v.string(),
+    city: v.string(),
+    coordinates: v.optional(
+      v.object({
+        lat: v.number(),
+        lng: v.number(),
+      }),
+    ),
+    disciplines: v.optional(v.array(v.string())),
+    trainingLevel: v.optional(v.string()),
+    healthStatus: v.optional(
+      v.union(
+        v.literal("healthy"),
+        v.literal("injured"),
+        v.literal("unrideable"),
+        v.literal("unknown"),
+      ),
+    ),
+    father: v.optional(v.string()),
+    mother: v.optional(v.string()),
+    pedigree: v.optional(v.string()),
+    registrationNumber: v.optional(v.string()),
+    seoTitle: v.optional(v.string()),
+    seoDescription: v.optional(v.string()),
   })
     .index("by_owner", ["ownerId"])
     .index("by_breed", ["breed"])
     .index("by_price", ["price"])
     .index("by_height", ["height"])
-    .index("by_available", ["isAvailable"]),
+    .index("by_available", ["isAvailable"])
+    .index("by_scrape_status", ["scrapeStatus"])
+    .index("by_region", ["region"])
+    .index("by_city", ["city"])
+    .index("by_breed_and_price", ["breed", "price"])
+    .index("by_source", ["sourceName"])
+    .searchIndex("search_description", {
+      searchField: "description",
+      filterFields: ["breed", "region", "isAvailable"],
+    }),
 
   favorites: defineTable({
     userId: v.id("users"),
@@ -49,6 +93,32 @@ const applicationTables = {
   })
     .index("by_conversation", ["conversationId"])
     .index("by_sender", ["senderId"]),
+
+  scrapingSources: defineTable({
+    name: v.string(),
+    baseUrl: v.string(),
+    isActive: v.boolean(),
+    scrapeFrequency: v.number(),
+    lastScrapedAt: v.optional(v.number()),
+    totalListings: v.number(),
+  }).index("by_active", ["isActive"]),
+
+  horseImages: defineTable({
+    horseId: v.id("horses"),
+    storageId: v.id("_storage"),
+    isPrimary: v.boolean(),
+    altText: v.optional(v.string()),
+  }).index("by_horse", ["horseId"]),
+
+  searchAnalytics: defineTable({
+    query: v.string(),
+    filters: v.record(v.string(), v.any()),
+    resultCount: v.number(),
+    timestamp: v.number(),
+    userId: v.optional(v.id("users")),
+  })
+    .index("by_query", ["query"])
+    .index("by_timestamp", ["timestamp"]),
 };
 
 export default defineSchema({
