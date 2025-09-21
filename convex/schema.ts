@@ -5,34 +5,26 @@ import { authTables } from "@convex-dev/auth/server";
 const applicationTables = {
   horses: defineTable({
     name: v.string(),
-    breed: v.string(),
-    age: v.number(),
-    height: v.number(),
-    gender: v.string(),
-    color: v.string(),
+    breed: v.optional(v.string()),
+    age: v.optional(v.number()),
+    height: v.optional(v.number()),
+    gender: v.optional(v.string()),
+    color: v.optional(v.string()),
     sourceUrl: v.optional(v.string()),
     sourceName: v.optional(v.string()),
-    purpose: v.string(),
+    purpose: v.optional(v.string()),
     price: v.number(),
     currency: v.string(),
     description: v.string(),
     imageUrl: v.optional(v.string()),
-    ownerId: v.id("users"),
+    ownerId: v.optional(v.id("users")),
     isAvailable: v.boolean(),
     hasTUV: v.boolean(),
     sourceListingId: v.optional(v.string()),
-    scrapedAt: v.number(),
-    lastSeenAt: v.number(),
-    scrapeStatus: v.union(
-      v.literal("active"),
-      v.literal("expired"),
-      v.literal("removed"),
-      v.literal("sold"),
-    ),
-    location: v.string(),
-    country: v.string(),
-    region: v.string(),
-    city: v.string(),
+    location: v.optional(v.string()),
+    country: v.optional(v.string()),
+    region: v.optional(v.string()),
+    city: v.optional(v.string()),
     coordinates: v.optional(
       v.object({
         lat: v.number(),
@@ -61,7 +53,6 @@ const applicationTables = {
     .index("by_price", ["price"])
     .index("by_height", ["height"])
     .index("by_available", ["isAvailable"])
-    .index("by_scrape_status", ["scrapeStatus"])
     .index("by_region", ["region"])
     .index("by_city", ["city"])
     .index("by_breed_and_price", ["breed", "price"])
