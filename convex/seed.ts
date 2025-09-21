@@ -1,14 +1,8 @@
-import { mutation } from "./_generated/server";
-import { getAuthUserId } from "@convex-dev/auth/server";
+import { internalMutation } from "./_generated/server";
 
-export const seedHorses = mutation({
+export const seedHorses = internalMutation({
   args: {},
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
-      throw new Error("Must be authenticated to seed horses");
-    }
-
     const horseData = [
       {
         name: "Thunder Bay",
@@ -616,7 +610,6 @@ export const seedHorses = mutation({
     for (const horse of horseData) {
       await ctx.db.insert("horses", {
         ...horse,
-        ownerId: userId,
         isAvailable: true,
         currency: "PLN",
         hasTUV: false,
