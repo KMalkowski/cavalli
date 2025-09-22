@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
 import Search, { SearchSkeleton } from "./search";
+import { Button } from "@/components/ui/button";
 
 const { SITE_NAME } = process.env;
 
@@ -48,7 +49,9 @@ export async function Navbar() {
             <Search />
           </Suspense>
         </div>
-        <div className="flex justify-end md:w-1/3">{/* <CartModal /> */}</div>
+        <div className="flex justify-end md:w-1/3">
+          <Button>Log in</Button>
+        </div>
       </div>
     </nav>
   );

@@ -1,7 +1,6 @@
 import { GridItem } from "@/components/grid/grid";
 import { GridTileImage } from "@/components/grid/tile";
 import { Doc } from "@/convex/_generated/dataModel";
-// import { Product } from 'lib/shopify/types';
 import Link from "next/link";
 
 export default function ProductGridItems({
