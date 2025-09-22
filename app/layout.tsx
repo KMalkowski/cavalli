@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
-import ConvexClientProvider from "@/components/ConvexClientProvider";
+import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import Collections from "@/components/layout/search/collections";
 import { Suspense } from "react";
 import ChildrenWrapper from "./children-wrapper";
@@ -11,6 +11,7 @@ import { sorting } from "@/lib/constants";
 import Footer from "@/components/layout/footer";
 import { baseUrl } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -56,6 +57,7 @@ export default function RootLayout({
             </div>
             <Footer />
           </ConvexClientProvider>
+          <Toaster />
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>
