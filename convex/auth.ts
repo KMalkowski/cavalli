@@ -1,11 +1,13 @@
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
+import { requireActionCtx } from "@convex-dev/better-auth/utils";
 import { components } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import { betterAuth } from "better-auth";
+import { resend, sendResetPassword } from "./email";
 
-const siteUrl = process.env.SITE_URL!;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
 
 // The component client has methods needed for integrating Convex with Better Auth,
 // as well as helper methods for general use.
@@ -21,13 +23,23 @@ export const createAuth = (
     logger: {
       disabled: optionsOnly,
     },
-    baseURL: process.env.SITE_URL!,
-    trustedOrigins: [process.env.SITE_URL!],
+    baseURL: process.env.NEXT_PUBLIC_SITE_URL!,
+    trustedOrigins: [
+      process.env.NEXT_PUBLIC_SITE_URL!,
+      "http://localhost:3001",
+    ],
     database: authComponent.adapter(ctx),
     // Configure simple, non-verified email/password to get started
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: false,
+      sendResetPassword: async ({ user, url }) => {
+        console.log("Sending reset password email to", user.email, url);
+        await sendResetPassword(requireActionCtx(ctx), {
+          to: user.email,
+          url,
+        });
+      },
     },
     socialProviders: {
       google: {

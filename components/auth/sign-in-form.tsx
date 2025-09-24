@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { type AuthMode } from "./auth";
 
 type SignInFormData = {
   email: string;
@@ -29,8 +30,9 @@ type SignInFormData = {
 
 export function SignInForm({
   className,
+  setAuthMode,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { setAuthMode: (mode: AuthMode) => void }) {
   const form = useForm<SignInFormData>({
     defaultValues: {
       email: "",
@@ -133,12 +135,12 @@ export function SignInForm({
                     <FormItem>
                       <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
-                        <a
-                          href="#"
-                          className="ml-auto text-sm underline-offset-4 hover:underline"
+                        <div
+                          onClick={() => setAuthMode("forgot-password")}
+                          className="cursor-pointer ml-auto text-sm underline-offset-4 hover:underline"
                         >
                           Forgot your password?
-                        </a>
+                        </div>
                       </div>
                       <FormControl>
                         <Input type="password" {...field} />
