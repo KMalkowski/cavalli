@@ -35,7 +35,7 @@ export default function ProductListItems({
               <img
                 src={horse.imageUrl || ''}
                 alt={horse.name}
-                className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105 md:h-64 md:w-64"
+                className="h-full w-full scale-[101%] object-cover transition-transform duration-300 ease-out group-hover:scale-105 md:h-64 md:w-64"
                 style={{ width: '100%', height: '100%' }}
               />
             </div>
