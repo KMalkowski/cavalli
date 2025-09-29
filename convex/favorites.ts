@@ -1,11 +1,13 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { authComponent } from "./auth";
 
 export const getUserFavorites = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
+    const user = await authComponent.getAuthUser(ctx);
+    const userId = user?._id;
     if (!userId) return [];
 
     const favorites = await ctx.db
@@ -18,11 +20,11 @@ export const getUserFavorites = query({
         const horse = await ctx.db.get(favorite.horseId);
         if (!horse) return null;
 
-        if (!horse.ownerId) return { ...horse, owner: null };
-        const owner = await ctx.db.get(horse.ownerId);
+        if (!horse.ownerEmail) return { ...horse, owner: null };
+        const owner = await authComponent.getAuthUser(ctx);
         return {
           ...horse,
-          owner: owner ? { name: owner.name, email: owner.email } : null,
+          owner: user ? { name: user.name, email: user.email } : null,
         };
       }),
     );
@@ -34,7 +36,8 @@ export const getUserFavorites = query({
 export const isFavorite = query({
   args: { horseId: v.id("horses") },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
+    const user = await authComponent.getAuthUser(ctx);
+    const userId = user?._id;
     if (!userId) return false;
 
     const favorite = await ctx.db
@@ -51,7 +54,8 @@ export const isFavorite = query({
 export const toggle = mutation({
   args: { horseId: v.id("horses") },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
+    const user = await authComponent.getAuthUser(ctx);
+    const userId = user?._id;
     if (!userId) {
       throw new Error("Must be authenticated to favorite horses");
     }

@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
 import { paginationOptsValidator } from "convex/server";
+import { authComponent } from "./auth";
 
 // Validator for horse data from LLM scraping
 const horseDataValidator = v.object({
@@ -134,21 +134,8 @@ export const list = query({
     const isDone = endIndex >= filteredHorses.length;
     const continueCursor = isDone ? null : endIndex.toString();
 
-    // Get owner information for each horse
-    const horsesWithOwners = await Promise.all(
-      page.map(async (horse) => {
-        if (!horse.ownerId) return { ...horse, owner: null };
-
-        const owner = await ctx.db.get(horse.ownerId);
-        return {
-          ...horse,
-          owner: owner ? { name: owner.name, email: owner.email } : null,
-        };
-      }),
-    );
-
     return {
-      page: horsesWithOwners,
+      page,
       isDone,
       continueCursor,
     };
@@ -158,17 +145,7 @@ export const list = query({
 export const getById = query({
   args: { id: v.id("horses") },
   handler: async (ctx, args) => {
-    const horse = await ctx.db.get(args.id);
-    if (!horse) return null;
-
-    if (!horse.ownerId) return { ...horse, owner: null };
-
-    const owner = await ctx.db.get(horse.ownerId);
-
-    return {
-      ...horse,
-      owner: owner ? { name: owner.name, email: owner.email } : null,
-    };
+    return await ctx.db.get(args.id);
   },
 });
 
@@ -194,14 +171,14 @@ export const create = mutation({
     imageUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user?.email) {
       throw new Error("Must be authenticated to create a listing");
     }
 
     return await ctx.db.insert("horses", {
       ...args,
-      ownerId: userId,
+      ownerEmail: user.email,
       isAvailable: true,
       currency: args.currency,
       hasTUV: false,
@@ -212,12 +189,14 @@ export const create = mutation({
 export const getUserListings = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
+    const user = await authComponent.getAuthUser(ctx);
+    const userId = user?._id;
+
     if (!userId) return [];
 
     return await ctx.db
       .query("horses")
-      .withIndex("by_owner", (q) => q.eq("ownerId", userId))
+      .withIndex("by_owner", (q) => q.eq("ownerEmail", userId))
       .collect();
   },
 });
