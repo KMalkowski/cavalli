@@ -47,7 +47,9 @@ export default function ProductListItems({
                     {horse.age && horse.age > 0 ? (
                       <Badge variant="outline">{`${horse.age} lat`}</Badge>
                     ) : null}
-                    {horse.breed && horse.breed.trim() !== '' ? (
+                    {horse.breed &&
+                    horse.breed.trim() !== '' &&
+                    horse.breed.toLowerCase() !== 'pozostałe' ? (
                       <Badge variant="outline">{horse.breed}</Badge>
                     ) : null}
                     {horse.color && horse.color.trim() !== '' ? (

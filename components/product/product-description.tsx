@@ -10,8 +10,8 @@ export function ProductDescription({ horse }: { horse: Doc<'horses'> }) {
   return (
     <>
       <div className="mb-6 flex flex-col border-b pb-6 dark:border-neutral-700">
-        <h1 className="mb-4 text-3xl font-medium md:text-5xl">{horse.name}</h1>
-        <div className="text-xl font-medium whitespace-nowrap md:mb-0 md:text-3xl">
+        <h1 className="mb-4 text-2xl font-medium md:text-4xl">{horse.name}</h1>
+        <div className="text-lg font-medium whitespace-nowrap md:mb-0 md:text-2xl">
           <h2>
             {horse.price} {horse.currency}
           </h2>
@@ -48,7 +48,7 @@ export function ProductDescription({ horse }: { horse: Doc<'horses'> }) {
       </div>
       {horse.description ? (
         <Prose
-          className="mb-6 text-base leading-tight dark:text-white/[60%]"
+          className="mb-6 text-base leading-tight hyphens-none dark:text-white/[60%]"
           html={horse.description}
         />
       ) : null}
