@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
@@ -23,6 +24,10 @@ export default function AuthControl() {
             <Button>Log in</Button>
           </DialogTrigger>
           <DialogContent showCloseButton={false}>
+            <DialogTitle className="sr-only">Log in</DialogTitle>
+            <DialogDescription className="sr-only">
+              Sign in to your account to access horse listings and features
+            </DialogDescription>
             <Auth />
           </DialogContent>
         </Dialog>
