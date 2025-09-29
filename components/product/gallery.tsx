@@ -76,7 +76,7 @@ export function Gallery({
       {/* Thumbnail Navigation */}
       {images.length > 1 && (
         <div className="mt-4 flex justify-center">
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="carousel-content flex gap-2 overflow-x-auto pb-2">
             {images.map((image, index) => (
               <button
                 key={image.src}
