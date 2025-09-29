@@ -255,7 +255,7 @@ export const generateStructuredData = action({
         - purpose: przeznaczenie (sportowy/rekreacyjny/roboczy/zaprzęgowy)
         - disciplines: dyscypliny sportowe (skoki/ujeżdżenie/rajdy)
         - trainingLevel: poziom wyszkolenia
-        - healthStatus: healthy/injured/unrideable/unknown
+        - healthStatus: zdrowy/ranny/niezdatny do jazdy/nieznany
         - hasTUV: czy ma badania (true/false)
         
         RODOWÓD:

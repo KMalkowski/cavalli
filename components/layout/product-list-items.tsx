@@ -1,5 +1,3 @@
-import { GridItem } from "@/components/grid/grid";
-import { GridTileImage } from "@/components/grid/tile";
 import { Doc } from "@/convex/_generated/dataModel";
 import Link from "next/link";
 import { Card } from "../ui/card";
@@ -10,13 +8,13 @@ import { Heart } from "lucide-react";
 const getGenderBadgeClasses = (gender: string) => {
   switch (gender.toLowerCase()) {
     case "ogier":
-      return "bg-blue-500 text-white border-blue-500"; // Niebieski
+      return "bg-blue-500 text-white border-blue-500";
     case "klacz":
-      return "bg-pink-500 text-white border-pink-500"; // Różowy
+      return "bg-pink-500 text-white border-pink-500";
     case "wałach":
-      return "bg-gray-200 text-gray-800 border-gray-300"; // Szary
+      return "bg-gray-200 text-gray-800 border-gray-300";
     default:
-      return "bg-gray-100 text-gray-600 border-gray-200"; // Jasny szary
+      return "bg-gray-100 text-gray-600 border-gray-200";
   }
 };
 
@@ -85,7 +83,7 @@ export default function ProductListItems({
                 </Button>
                 <Button asChild className="w-full md:w-auto">
                   <Link href={`/horse/${horse._id}`}>
-                    View
+                    Szczegóły
                   </Link>
                 </Button>
               </div>
