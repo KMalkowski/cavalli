@@ -34,6 +34,14 @@ To learn more about developing your project with Convex, check out:
 - [Stack](https://stack.convex.dev/) for in-depth articles on advanced topics.
 - [Convex Auth docs](https://labs.convex.dev/auth) for documentation on the Convex Auth library.
 
+## Firecrawl testing
+
+To test Firecrawl via a Convex action:
+
+- Set `FIRECRAWL_API_KEY` in your Convex environment (Convex dashboard → Environment Variables) or wherever Convex pulls env.
+- Go to the home page and use the temporary "Fetch with Firecrawl" tester.
+- Remove `components/firecrawl-tester.tsx` and its import from `app/page.tsx` when you're done.
+
 ## Configuring other authentication methods
 
 To configure different authentication methods, see [Configuration](https://labs.convex.dev/auth/config) in the Convex Auth docs.

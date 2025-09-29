@@ -3,6 +3,7 @@ import ProductGridItems from "@/components/layout/product-grid-items";
 import { api } from "@/convex/_generated/api";
 import { defaultSort, sorting } from "@/lib/constants";
 import { fetchQuery } from "convex/nextjs";
+import FirecrawlTester from "@/components/firecrawl-tester";
 
 export const metadata = {
   title: "Search",
@@ -31,6 +32,8 @@ export default async function SearchPage(props: {
 
   const resultsText = horses.page.length > 1 ? "results" : "result";
 
+  
+
   return (
     <>
       {searchValue ? (
@@ -47,6 +50,9 @@ export default async function SearchPage(props: {
           <ProductGridItems horses={horses.page} />
         </Grid>
       ) : null}
+
+      {/* Temporary tester for Firecrawl → remove when done */}
+      <FirecrawlTester />
     </>
   );
 }

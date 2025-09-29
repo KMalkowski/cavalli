@@ -20,7 +20,7 @@ export function GridTileImage({
 } & React.ComponentProps<typeof Image>) {
   return (
     <Card>
-      {props.src ? (
+      {/* {props.src ? (
         <Image
           className={clsx("relative h-full w-full object-contain", {
             "transition duration-300 ease-in-out group-hover:scale-105":
@@ -28,7 +28,7 @@ export function GridTileImage({
           })}
           {...props}
         />
-      ) : null}
+      ) : null} */}
       {label ? (
         <Label
           title={label.title}
