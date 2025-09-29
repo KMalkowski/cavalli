@@ -3,6 +3,7 @@ import ProductGridItems from "@/components/layout/product-grid-items";
 import { api } from "@/convex/_generated/api";
 import { defaultSort, sorting } from "@/lib/constants";
 import { fetchQuery } from "convex/nextjs";
+import Horses from "./horses";
 
 export const metadata = {
   title: "Search",
@@ -47,6 +48,8 @@ export default async function SearchPage(props: {
           <ProductGridItems horses={horses.page} />
         </Grid>
       ) : null}
+
+      <Horses />
     </>
   );
 }

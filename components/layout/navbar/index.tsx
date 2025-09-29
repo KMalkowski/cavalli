@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
 import Search, { SearchSkeleton } from "./search";
 import AuthControl from "./auth-control";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 const { SITE_NAME } = process.env;
 
@@ -49,7 +51,12 @@ export async function Navbar() {
             <Search />
           </Suspense>
         </div>
-        <div className="flex justify-end md:w-1/3">
+        <div className="flex justify-end md:w-1/3 gap-2">
+          <Link href="/new-listing-form">
+            <Button>
+              <Plus />
+            </Button>
+          </Link>
           <AuthControl />
         </div>
       </div>

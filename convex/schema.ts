@@ -17,7 +17,7 @@ const applicationTables = {
     currency: v.string(),
     description: v.string(),
     imageUrl: v.optional(v.string()),
-    ownerId: v.optional(v.id("users")),
+    ownerEmail: v.optional(v.string()),
     isAvailable: v.boolean(),
     hasTUV: v.boolean(),
     sourceListingId: v.optional(v.string()),
@@ -48,7 +48,7 @@ const applicationTables = {
     seoTitle: v.optional(v.string()),
     seoDescription: v.optional(v.string()),
   })
-    .index("by_owner", ["ownerId"])
+    .index("by_owner", ["ownerEmail"])
     .index("by_breed", ["breed"])
     .index("by_price", ["price"])
     .index("by_height", ["height"])
@@ -63,7 +63,7 @@ const applicationTables = {
     }),
 
   favorites: defineTable({
-    userId: v.id("users"),
+    userId: v.id("user"),
     horseId: v.id("horses"),
   })
     .index("by_user", ["userId"])
@@ -71,14 +71,14 @@ const applicationTables = {
     .index("by_user_and_horse", ["userId", "horseId"]),
 
   conversations: defineTable({
-    participantIds: v.array(v.id("users")),
+    participantIds: v.array(v.id("user")),
     horseId: v.id("horses"),
     lastMessageTime: v.optional(v.number()),
   }).index("by_horse", ["horseId"]),
 
   messages: defineTable({
     conversationId: v.id("conversations"),
-    senderId: v.id("users"),
+    senderId: v.id("user"),
     content: v.string(),
     timestamp: v.number(),
   })
@@ -106,7 +106,7 @@ const applicationTables = {
     filters: v.record(v.string(), v.any()),
     resultCount: v.number(),
     timestamp: v.number(),
-    userId: v.optional(v.id("users")),
+    userId: v.optional(v.id("user")),
   })
     .index("by_query", ["query"])
     .index("by_timestamp", ["timestamp"]),

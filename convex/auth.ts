@@ -26,7 +26,7 @@ export const createAuth = (
     baseURL: process.env.NEXT_PUBLIC_SITE_URL!,
     trustedOrigins: [
       process.env.NEXT_PUBLIC_SITE_URL!,
-      "http://localhost:3001",
+      "http://localhost:3000",
     ],
     database: authComponent.adapter(ctx),
     // Configure simple, non-verified email/password to get started
@@ -59,6 +59,10 @@ export const createAuth = (
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
-    return authComponent.getAuthUser(ctx);
+    try {
+      return await authComponent.getAuthUser(ctx);
+    } catch (error) {
+      return null;
+    }
   },
 });

@@ -13,7 +13,6 @@ import type * as email from "../email.js";
 import type * as favorites from "../favorites.js";
 import type * as horses from "../horses.js";
 import type * as http from "../http.js";
-import type * as messages from "../messages.js";
 import type * as seed from "../seed.js";
 
 import type {
@@ -36,7 +35,6 @@ declare const fullApi: ApiFromModules<{
   favorites: typeof favorites;
   horses: typeof horses;
   http: typeof http;
-  messages: typeof messages;
   seed: typeof seed;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

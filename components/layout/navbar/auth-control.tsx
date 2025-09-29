@@ -1,6 +1,6 @@
 "use client";
 
-import { Authenticated, Unauthenticated } from "convex/react";
+import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,7 +23,6 @@ export default function AuthControl() {
             <Button>Log in</Button>
           </DialogTrigger>
           <DialogContent showCloseButton={false}>
-            <DialogTitle>Welcome back</DialogTitle>
             <Auth />
           </DialogContent>
         </Dialog>
@@ -31,6 +30,7 @@ export default function AuthControl() {
       <Authenticated>
         <Button
           disabled={isLoggingOut}
+          variant="outline"
           onClick={() => {
             authClient.signOut({
               fetchOptions: {
@@ -47,6 +47,11 @@ export default function AuthControl() {
           Log out
         </Button>
       </Authenticated>
+      <AuthLoading>
+        <Button variant="outline" disabled>
+          Loading...
+        </Button>
+      </AuthLoading>
     </div>
   );
 }
