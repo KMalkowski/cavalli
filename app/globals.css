@@ -8,7 +8,7 @@
 ::before,
 ::backdrop,
 ::file-selector-button {
-  border-color: var(--color-gray-200, currentColor);
+  border-color: var(--color-gray-300, currentColor);
 }
 
 :root {
@@ -42,7 +42,7 @@
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #fef3c7;
   --sidebar-accent-foreground: #7f1d1d;
-  --sidebar-border: #f5e8d2;
+  --sidebar-border: var(--color-gray-300, currentColor);
   --sidebar-ring: #9b2c2c;
   --font-sans: Poppins, sans-serif;
   --font-serif: Libre Baskerville, serif;

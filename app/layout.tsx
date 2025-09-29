@@ -12,6 +12,7 @@ import Footer from '@/components/layout/footer'
 import { baseUrl } from '@/lib/utils'
 import { Navbar } from '@/components/layout/navbar'
 import { Toaster } from 'sonner'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -41,15 +42,11 @@ export default function RootLayout({
       <html lang="pl">
         <body className={`${poppins.variable} antialiased`}>
           <ConvexClientProvider>
-            <Navbar />
-            <div className="mx-auto flex max-w-(--breakpoint-xl) flex-col gap-8 px-4 pb-4 text-black md:flex-row dark:text-white">
-              <div className="order-last min-h-screen w-full md:order-none">
-                <Suspense fallback={null}>
-                  <ChildrenWrapper>{children}</ChildrenWrapper>
-                </Suspense>
-              </div>
-            </div>
-            <Footer />
+            <NuqsAdapter>
+              <Suspense fallback={null}>
+                <ChildrenWrapper>{children}</ChildrenWrapper>
+              </Suspense>
+            </NuqsAdapter>
           </ConvexClientProvider>
           <Toaster />
         </body>
