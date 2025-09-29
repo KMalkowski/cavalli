@@ -236,7 +236,7 @@ export const generateStructuredData = action({
         - breed: rasa konia (np. "Arabski", "Fryzyjski", "Śląski", "Zimnokrwisty")
         - age: wiek w latach (tylko liczba)
         - height: wysokość w cm (tylko liczba)
-        - gender: płeć - Ogier/Klacz/Wałach/Źrebak/Źrebica
+        - gender: płeć - Ogier/Klacz/Wałach
         - color: maść konia (np. "kasztanowy", "siwy", "gniady")
         
         CENY I DOSTĘPNOŚĆ:
