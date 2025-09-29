@@ -63,6 +63,11 @@ export default function ProductListItems({
                            {horse.breed}
                          </Badge>
                        ) : null}
+                       {horse.color && horse.color.trim() !== '' ? (
+                         <Badge variant="outline">
+                           {horse.color}
+                         </Badge>
+                       ) : null}
                        {horse.height && horse.height > 0 ? (
                          <Badge variant="outline">
                            {`${horse.height} cm`}
