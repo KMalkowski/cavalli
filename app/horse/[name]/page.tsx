@@ -301,10 +301,6 @@ export default async function HorsePage(props: {
                   <TableCell className="font-medium">Miasto</TableCell>
                   <TableCell>{formatValue(horse.city)}</TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Współrzędne</TableCell>
-                  <TableCell>{formatValue(horse.coordinates)}</TableCell>
-                </TableRow>
 
                 {/* Źródło i techniczne */}
                 <TableRow>
