@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -16,37 +16,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth-client'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 type ResetPasswordFormData = {
-  password: string;
-  confirmPassword: string;
-};
+  password: string
+  confirmPassword: string
+}
 
 export function ResetPasswordForm({
   className,
   token,
   ...props
-}: React.ComponentProps<"div"> & { token: string | null }) {
+}: React.ComponentProps<'div'> & { token: string | null }) {
   const form = useForm<ResetPasswordFormData>({
     defaultValues: {
-      password: "",
-      confirmPassword: "",
+      password: '',
+      confirmPassword: '',
     },
-  });
+  })
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     if (data.password !== data.confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
+      toast.error('Passwords do not match')
+      return
     }
 
     if (!token) {
-      toast.error("Invalid reset token");
-      return;
+      toast.error('Invalid reset token')
+      return
     }
 
     await authClient.resetPassword(
@@ -56,20 +56,20 @@ export function ResetPasswordForm({
       },
       {
         onSuccess: () => {
-          toast.success("Password reset successfully!");
+          toast.success('Password reset successfully!')
         },
         onError: (error) => {
-          toast.error(error.error.message);
+          toast.error(error.error.message)
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
-  const isSubmitting = form.formState.isSubmitting;
+  const isSubmitting = form.formState.isSubmitting
 
   if (!token) {
     return (
-      <div className={cn("flex", className)} {...props}>
+      <div className={cn('flex', className)} {...props}>
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-xl">Invalid Reset Link</CardTitle>
@@ -80,11 +80,11 @@ export function ResetPasswordForm({
           </CardHeader>
         </Card>
       </div>
-    );
+    )
   }
 
   return (
-    <div className={cn("w-full max-w-md", className)} {...props}>
+    <div className={cn('w-full max-w-md', className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Reset your password</CardTitle>
@@ -101,10 +101,10 @@ export function ResetPasswordForm({
                   control={form.control}
                   name="password"
                   rules={{
-                    required: "Password is required",
+                    required: 'Password is required',
                     minLength: {
                       value: 8,
-                      message: "Password must be at least 8 characters",
+                      message: 'Password must be at least 8 characters',
                     },
                   }}
                   render={({ field }) => (
@@ -125,7 +125,7 @@ export function ResetPasswordForm({
                   control={form.control}
                   name="confirmPassword"
                   rules={{
-                    required: "Please confirm your password",
+                    required: 'Please confirm your password',
                   }}
                   render={({ field }) => (
                     <FormItem>
@@ -146,7 +146,7 @@ export function ResetPasswordForm({
                   className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Resetting..." : "Reset Password"}
+                  {isSubmitting ? 'Resetting...' : 'Reset Password'}
                 </Button>
               </form>
             </Form>
@@ -154,5 +154,5 @@ export function ResetPasswordForm({
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

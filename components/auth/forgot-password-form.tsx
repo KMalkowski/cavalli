@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -16,25 +16,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth-client'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 type ForgotPasswordFormData = {
-  email: string;
-};
+  email: string
+}
 
 export function ForgotPasswordForm({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<'div'>) {
   const form = useForm<ForgotPasswordFormData>({
     defaultValues: {
-      email: "",
+      email: '',
     },
-  });
+  })
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     await authClient.forgetPassword(
@@ -44,19 +44,19 @@ export function ForgotPasswordForm({
       },
       {
         onSuccess: () => {
-          toast.success("Password reset email sent! Check your inbox.");
+          toast.success('Password reset email sent! Check your inbox.')
         },
         onError: (error) => {
-          toast.error(error.error.message);
+          toast.error(error.error.message)
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
-  const isSubmitting = form.formState.isSubmitting;
+  const isSubmitting = form.formState.isSubmitting
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Forgot your password?</CardTitle>
@@ -76,10 +76,10 @@ export function ForgotPasswordForm({
                   control={form.control}
                   name="email"
                   rules={{
-                    required: "Email is required",
+                    required: 'Email is required',
                     pattern: {
                       value: /^\S+@\S+$/i,
-                      message: "Please enter a valid email address",
+                      message: 'Please enter a valid email address',
                     },
                   }}
                   render={({ field }) => (
@@ -101,7 +101,7 @@ export function ForgotPasswordForm({
                   className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Sending..." : "Send Reset Email"}
+                  {isSubmitting ? 'Sending...' : 'Send Reset Email'}
                 </Button>
               </form>
             </Form>
@@ -109,5 +109,5 @@ export function ForgotPasswordForm({
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

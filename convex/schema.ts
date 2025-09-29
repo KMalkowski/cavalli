@@ -1,6 +1,6 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-import { authTables } from "@convex-dev/auth/server";
+import { defineSchema, defineTable } from 'convex/server'
+import { v } from 'convex/values'
+import { authTables } from '@convex-dev/auth/server'
 
 const applicationTables = {
   horses: defineTable({
@@ -29,17 +29,17 @@ const applicationTables = {
       v.object({
         lat: v.number(),
         lng: v.number(),
-      }),
+      })
     ),
     disciplines: v.optional(v.array(v.string())),
     trainingLevel: v.optional(v.string()),
     healthStatus: v.optional(
       v.union(
-        v.literal("healthy"),
-        v.literal("injured"),
-        v.literal("unrideable"),
-        v.literal("unknown"),
-      ),
+        v.literal('healthy'),
+        v.literal('injured'),
+        v.literal('unrideable'),
+        v.literal('unknown')
+      )
     ),
     father: v.optional(v.string()),
     mother: v.optional(v.string()),
@@ -48,42 +48,42 @@ const applicationTables = {
     seoTitle: v.optional(v.string()),
     seoDescription: v.optional(v.string()),
   })
-    .index("by_owner", ["ownerEmail"])
-    .index("by_breed", ["breed"])
-    .index("by_price", ["price"])
-    .index("by_height", ["height"])
-    .index("by_available", ["isAvailable"])
-    .index("by_region", ["region"])
-    .index("by_city", ["city"])
-    .index("by_breed_and_price", ["breed", "price"])
-    .index("by_source", ["sourceName"])
-    .searchIndex("search_description", {
-      searchField: "description",
-      filterFields: ["breed", "region", "isAvailable"],
+    .index('by_owner', ['ownerEmail'])
+    .index('by_breed', ['breed'])
+    .index('by_price', ['price'])
+    .index('by_height', ['height'])
+    .index('by_available', ['isAvailable'])
+    .index('by_region', ['region'])
+    .index('by_city', ['city'])
+    .index('by_breed_and_price', ['breed', 'price'])
+    .index('by_source', ['sourceName'])
+    .searchIndex('search_description', {
+      searchField: 'description',
+      filterFields: ['breed', 'region', 'isAvailable'],
     }),
 
   favorites: defineTable({
-    userId: v.id("user"),
-    horseId: v.id("horses"),
+    userId: v.id('user'),
+    horseId: v.id('horses'),
   })
-    .index("by_user", ["userId"])
-    .index("by_horse", ["horseId"])
-    .index("by_user_and_horse", ["userId", "horseId"]),
+    .index('by_user', ['userId'])
+    .index('by_horse', ['horseId'])
+    .index('by_user_and_horse', ['userId', 'horseId']),
 
   conversations: defineTable({
-    participantIds: v.array(v.id("user")),
-    horseId: v.id("horses"),
+    participantIds: v.array(v.id('user')),
+    horseId: v.id('horses'),
     lastMessageTime: v.optional(v.number()),
-  }).index("by_horse", ["horseId"]),
+  }).index('by_horse', ['horseId']),
 
   messages: defineTable({
-    conversationId: v.id("conversations"),
-    senderId: v.id("user"),
+    conversationId: v.id('conversations'),
+    senderId: v.id('user'),
     content: v.string(),
     timestamp: v.number(),
   })
-    .index("by_conversation", ["conversationId"])
-    .index("by_sender", ["senderId"]),
+    .index('by_conversation', ['conversationId'])
+    .index('by_sender', ['senderId']),
 
   scrapingSources: defineTable({
     name: v.string(),
@@ -92,27 +92,27 @@ const applicationTables = {
     scrapeFrequency: v.number(),
     lastScrapedAt: v.optional(v.number()),
     totalListings: v.number(),
-  }).index("by_active", ["isActive"]),
+  }).index('by_active', ['isActive']),
 
   horseImages: defineTable({
-    horseId: v.id("horses"),
-    storageId: v.id("_storage"),
+    horseId: v.id('horses'),
+    storageId: v.id('_storage'),
     isPrimary: v.boolean(),
     altText: v.optional(v.string()),
-  }).index("by_horse", ["horseId"]),
+  }).index('by_horse', ['horseId']),
 
   searchAnalytics: defineTable({
     query: v.string(),
     filters: v.record(v.string(), v.any()),
     resultCount: v.number(),
     timestamp: v.number(),
-    userId: v.optional(v.id("user")),
+    userId: v.optional(v.id('user')),
   })
-    .index("by_query", ["query"])
-    .index("by_timestamp", ["timestamp"]),
-};
+    .index('by_query', ['query'])
+    .index('by_timestamp', ['timestamp']),
+}
 
 export default defineSchema({
   ...authTables,
   ...applicationTables,
-});
+})

@@ -1,17 +1,17 @@
-import LogoSquare from "@/components/logo-square";
-import Link from "next/link";
-import { Suspense } from "react";
-import MobileMenu from "./mobile-menu";
-import Search, { SearchSkeleton } from "./search";
-import AuthControl from "./auth-control";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import LogoSquare from '@/components/logo-square'
+import Link from 'next/link'
+import { Suspense } from 'react'
+import MobileMenu from './mobile-menu'
+import Search, { SearchSkeleton } from './search'
+import AuthControl from './auth-control'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
 
-const { SITE_NAME } = process.env;
+const { SITE_NAME } = process.env
 
 export async function Navbar() {
   // const menu = await getMenu("next-js-frontend-header-menu");
-  const menu = [{ title: "Home", path: "/" }];
+  const menu = [{ title: 'Home', path: '/' }]
 
   return (
     <nav className="relative flex items-center justify-between p-4 lg:px-6">
@@ -51,7 +51,7 @@ export async function Navbar() {
             <Search />
           </Suspense>
         </div>
-        <div className="flex justify-end md:w-1/3 gap-2">
+        <div className="flex justify-end gap-2 md:w-1/3">
           <Link href="/new-listing-form">
             <Button>
               <Plus />
@@ -61,5 +61,5 @@ export async function Navbar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

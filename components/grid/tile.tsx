@@ -1,7 +1,7 @@
-import clsx from "clsx";
-import Image from "next/image";
-import Label from "@/components/label";
-import { Card } from "../ui/card";
+import clsx from 'clsx'
+import Image from 'next/image'
+import Label from '@/components/label'
+import { Card } from '../ui/card'
 
 export function GridTileImage({
   isInteractive = true,
@@ -9,14 +9,14 @@ export function GridTileImage({
   label,
   ...props
 }: {
-  isInteractive?: boolean;
-  active?: boolean;
+  isInteractive?: boolean
+  active?: boolean
   label?: {
-    title: string;
-    amount: string;
-    currencyCode: string;
-    position?: "bottom" | "center";
-  };
+    title: string
+    amount: string
+    currencyCode: string
+    position?: 'bottom' | 'center'
+  }
 } & React.ComponentProps<typeof Image>) {
   return (
     <Card>
@@ -38,5 +38,5 @@ export function GridTileImage({
         />
       ) : null}
     </Card>
-  );
+  )
 }

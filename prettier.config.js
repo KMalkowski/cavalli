@@ -1,4 +1,4 @@
-/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */ 
+/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */
 const config = {
   plugins: ['prettier-plugin-tailwindcss'],
   singleQuote: true,
@@ -7,4 +7,4 @@ const config = {
   trailingComma: 'es5',
 }
 
-export default config
+module.exports = config

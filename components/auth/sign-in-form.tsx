@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -9,29 +9,29 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { type AuthMode } from "./auth";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth-client'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { type AuthMode } from './auth'
 
 type SignInFormData = {
-  email: string;
-  password: string;
-};
+  email: string
+  password: string
+}
 
 export function SignInForm({
   className,
   setAuthMode,
   ...props
-}: React.ComponentProps<"div"> & { setAuthMode: (mode: AuthMode) => void }) {
+}: React.ComponentProps<'div'> & { setAuthMode: (mode: AuthMode) => void }) {
   const form = useForm<SignInFormData>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-  });
+  })
 
   const onSubmit = async (data: SignInFormData) => {
     await authClient.signIn.email(
@@ -41,18 +41,18 @@ export function SignInForm({
       },
       {
         onError: (error) => {
-          toast.error(error.error.message);
+          toast.error(error.error.message)
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
-  const isSubmitting = form.formState.isSubmitting;
+  const isSubmitting = form.formState.isSubmitting
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="grid gap-6">
-        <h1 className="text-xl font-bold text-center">Welcome back</h1>
+        <h1 className="text-center text-xl font-bold">Welcome back</h1>
         <div className="flex flex-col gap-4">
           <Button
             variant="outline"
@@ -60,11 +60,11 @@ export function SignInForm({
             onClick={async () => {
               try {
                 await authClient.signIn.social({
-                  provider: "google",
-                });
+                  provider: 'google',
+                })
               } catch (error) {
-                toast.error("Google sign in failed. Please try again.");
-                console.error("Google sign in failed:", error);
+                toast.error('Google sign in failed. Please try again.')
+                console.error('Google sign in failed:', error)
               }
             }}
           >
@@ -88,10 +88,10 @@ export function SignInForm({
               control={form.control}
               name="email"
               rules={{
-                required: "Email is required",
+                required: 'Email is required',
                 pattern: {
                   value: /^\S+@\S+$/i,
-                  message: "Please enter a valid email address",
+                  message: 'Please enter a valid email address',
                 },
               }}
               render={({ field }) => (
@@ -112,15 +112,15 @@ export function SignInForm({
               control={form.control}
               name="password"
               rules={{
-                required: "Password is required",
+                required: 'Password is required',
               }}
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center">
                     <FormLabel>Password</FormLabel>
                     <div
-                      onClick={() => setAuthMode("forgot-password")}
-                      className="cursor-pointer ml-auto text-sm underline-offset-4 hover:underline"
+                      onClick={() => setAuthMode('forgot-password')}
+                      className="ml-auto cursor-pointer text-sm underline-offset-4 hover:underline"
                     >
                       Forgot your password?
                     </div>
@@ -133,11 +133,11 @@ export function SignInForm({
               )}
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Signing in..." : "Login"}
+              {isSubmitting ? 'Signing in...' : 'Login'}
             </Button>
           </form>
         </Form>
       </div>
     </div>
-  );
+  )
 }

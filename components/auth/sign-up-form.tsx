@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -9,38 +9,38 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth-client'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 type SignUpFormData = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+  name: string
+  email: string
+  password: string
+  confirmPassword: string
+}
 
 export function SignUpForm({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<'div'>) {
   const form = useForm<SignUpFormData>({
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
-  });
+  })
 
   const onSubmit = async (data: SignUpFormData) => {
     if (data.password !== data.confirmPassword) {
-      form.setError("confirmPassword", {
-        message: "Passwords do not match",
-      });
-      return;
+      form.setError('confirmPassword', {
+        message: 'Passwords do not match',
+      })
+      return
     }
 
     await authClient.signUp.email(
@@ -51,19 +51,19 @@ export function SignUpForm({
       },
       {
         onError: (error) => {
-          toast.error(error.error.message);
-          console.error("Sign up failed:", error);
+          toast.error(error.error.message)
+          console.error('Sign up failed:', error)
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
-  const isSubmitting = form.formState.isSubmitting;
+  const isSubmitting = form.formState.isSubmitting
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="grid gap-6">
-        <h1 className="text-xl font-semibold text-center leading-none">
+        <h1 className="text-center text-xl leading-none font-semibold">
           Create an account
         </h1>
         <div className="flex flex-col gap-4">
@@ -73,11 +73,11 @@ export function SignUpForm({
             onClick={async () => {
               try {
                 await authClient.signIn.social({
-                  provider: "google",
-                });
+                  provider: 'google',
+                })
               } catch (error) {
-                toast.error("Google sign up failed. Please try again.");
-                console.error("Google sign up failed:", error);
+                toast.error('Google sign up failed. Please try again.')
+                console.error('Google sign up failed:', error)
               }
             }}
           >
@@ -101,10 +101,10 @@ export function SignUpForm({
               control={form.control}
               name="name"
               rules={{
-                required: "Name is required",
+                required: 'Name is required',
                 minLength: {
                   value: 2,
-                  message: "Name must be at least 2 characters",
+                  message: 'Name must be at least 2 characters',
                 },
               }}
               render={({ field }) => (
@@ -121,10 +121,10 @@ export function SignUpForm({
               control={form.control}
               name="email"
               rules={{
-                required: "Email is required",
+                required: 'Email is required',
                 pattern: {
                   value: /^\S+@\S+$/i,
-                  message: "Please enter a valid email address",
+                  message: 'Please enter a valid email address',
                 },
               }}
               render={({ field }) => (
@@ -145,10 +145,10 @@ export function SignUpForm({
               control={form.control}
               name="password"
               rules={{
-                required: "Password is required",
+                required: 'Password is required',
                 minLength: {
                   value: 8,
-                  message: "Password must be at least 8 characters",
+                  message: 'Password must be at least 8 characters',
                 },
               }}
               render={({ field }) => (
@@ -165,7 +165,7 @@ export function SignUpForm({
               control={form.control}
               name="confirmPassword"
               rules={{
-                required: "Please confirm your password",
+                required: 'Please confirm your password',
               }}
               render={({ field }) => (
                 <FormItem>
@@ -178,11 +178,11 @@ export function SignUpForm({
               )}
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Creating account..." : "Create account"}
+              {isSubmitting ? 'Creating account...' : 'Create account'}
             </Button>
           </form>
         </Form>
       </div>
     </div>
-  );
+  )
 }

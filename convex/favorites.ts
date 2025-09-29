@@ -1,81 +1,81 @@
-import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
-import { authComponent } from "./auth";
+import { query, mutation } from './_generated/server'
+import { v } from 'convex/values'
+import { getAuthUserId } from '@convex-dev/auth/server'
+import { authComponent } from './auth'
 
 export const getUserFavorites = query({
   args: {},
   handler: async (ctx) => {
-    const user = await authComponent.getAuthUser(ctx);
-    const userId = user?._id;
-    if (!userId) return [];
+    const user = await authComponent.getAuthUser(ctx)
+    const userId = user?._id
+    if (!userId) return []
 
     const favorites = await ctx.db
-      .query("favorites")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .collect();
+      .query('favorites')
+      .withIndex('by_user', (q) => q.eq('userId', userId))
+      .collect()
 
     const horses = await Promise.all(
       favorites.map(async (favorite) => {
-        const horse = await ctx.db.get(favorite.horseId);
-        if (!horse) return null;
+        const horse = await ctx.db.get(favorite.horseId)
+        if (!horse) return null
 
-        if (!horse.ownerEmail) return { ...horse, owner: null };
-        const owner = await authComponent.getAuthUser(ctx);
+        if (!horse.ownerEmail) return { ...horse, owner: null }
+        const owner = await authComponent.getAuthUser(ctx)
         return {
           ...horse,
           owner: user ? { name: user.name, email: user.email } : null,
-        };
-      }),
-    );
+        }
+      })
+    )
 
-    return horses.filter(Boolean);
+    return horses.filter(Boolean)
   },
-});
+})
 
 export const isFavorite = query({
-  args: { horseId: v.id("horses") },
+  args: { horseId: v.id('horses') },
   handler: async (ctx, args) => {
-    const user = await authComponent.getAuthUser(ctx);
-    const userId = user?._id;
-    if (!userId) return false;
+    const user = await authComponent.getAuthUser(ctx)
+    const userId = user?._id
+    if (!userId) return false
 
     const favorite = await ctx.db
-      .query("favorites")
-      .withIndex("by_user_and_horse", (q) =>
-        q.eq("userId", userId).eq("horseId", args.horseId),
+      .query('favorites')
+      .withIndex('by_user_and_horse', (q) =>
+        q.eq('userId', userId).eq('horseId', args.horseId)
       )
-      .unique();
+      .unique()
 
-    return !!favorite;
+    return !!favorite
   },
-});
+})
 
 export const toggle = mutation({
-  args: { horseId: v.id("horses") },
+  args: { horseId: v.id('horses') },
   handler: async (ctx, args) => {
-    const user = await authComponent.getAuthUser(ctx);
-    const userId = user?._id;
+    const user = await authComponent.getAuthUser(ctx)
+    const userId = user?._id
     if (!userId) {
-      throw new Error("Must be authenticated to favorite horses");
+      throw new Error('Must be authenticated to favorite horses')
     }
 
     const existing = await ctx.db
-      .query("favorites")
-      .withIndex("by_user_and_horse", (q) =>
-        q.eq("userId", userId).eq("horseId", args.horseId),
+      .query('favorites')
+      .withIndex('by_user_and_horse', (q) =>
+        q.eq('userId', userId).eq('horseId', args.horseId)
       )
-      .unique();
+      .unique()
 
     if (existing) {
-      await ctx.db.delete(existing._id);
-      return false;
+      await ctx.db.delete(existing._id)
+      return false
     } else {
-      await ctx.db.insert("favorites", {
+      await ctx.db.insert('favorites', {
         userId,
         horseId: args.horseId,
-      });
-      return true;
+      })
+      return true
     }
   },
-});
+})

@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
-import { Button } from "@/components/ui/button";
+import { Authenticated, Unauthenticated, AuthLoading } from 'convex/react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { authClient } from "@/lib/auth-client";
-import { useState } from "react";
-import { Auth } from "@/components/auth/auth";
+} from '@/components/ui/dialog'
+import { authClient } from '@/lib/auth-client'
+import { useState } from 'react'
+import { Auth } from '@/components/auth/auth'
 
 export default function AuthControl() {
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   return (
     <div>
@@ -35,13 +35,13 @@ export default function AuthControl() {
             authClient.signOut({
               fetchOptions: {
                 onRequest: () => {
-                  setIsLoggingOut(true);
+                  setIsLoggingOut(true)
                 },
                 onResponse: () => {
-                  setIsLoggingOut(false);
+                  setIsLoggingOut(false)
                 },
               },
-            });
+            })
           }}
         >
           Log out
@@ -53,5 +53,5 @@ export default function AuthControl() {
         </Button>
       </AuthLoading>
     </div>
-  );
+  )
 }

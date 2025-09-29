@@ -1,26 +1,26 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
-import { GridTileImage } from "@/components/grid/tile";
-import Footer from "@/components/layout/footer";
-import { Gallery } from "@/components/product/gallery";
-import { ProductProvider } from "@/components/product/product-context";
-import { ProductDescription } from "@/components/product/product-description";
-import Link from "next/link";
-import { Suspense } from "react";
-import { api } from "@/convex/_generated/api";
-import { fetchQuery } from "convex/nextjs";
-import { Id } from "@/convex/_generated/dataModel";
+import { GridTileImage } from '@/components/grid/tile'
+import Footer from '@/components/layout/footer'
+import { Gallery } from '@/components/product/gallery'
+import { ProductProvider } from '@/components/product/product-context'
+import { ProductDescription } from '@/components/product/product-description'
+import Link from 'next/link'
+import { Suspense } from 'react'
+import { api } from '@/convex/_generated/api'
+import { fetchQuery } from 'convex/nextjs'
+import { Id } from '@/convex/_generated/dataModel'
 
 export async function generateMetadata(props: {
-  params: Promise<{ name: string }>;
+  params: Promise<{ name: string }>
 }): Promise<Metadata> {
-  const params = await props.params;
+  const params = await props.params
   const horse = await fetchQuery(api.horses.getById, {
-    id: params.name as Id<"horses">,
-  });
+    id: params.name as Id<'horses'>,
+  })
 
-  if (!horse) return notFound();
+  if (!horse) return notFound()
 
   return {
     title: horse.name,
@@ -45,35 +45,35 @@ export async function generateMetadata(props: {
           ],
         }
       : null,
-  };
+  }
 }
 
 export default async function HorsePage(props: {
-  params: Promise<{ name: string }>;
+  params: Promise<{ name: string }>
 }) {
-  const params = await props.params;
+  const params = await props.params
   const horse = await fetchQuery(api.horses.getById, {
-    id: params.name as Id<"horses">,
-  });
+    id: params.name as Id<'horses'>,
+  })
 
-  if (!horse) return notFound();
+  if (!horse) return notFound()
 
   const productJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
+    '@context': 'https://schema.org',
+    '@type': 'Product',
     name: horse.name,
     description: horse.description,
     image: horse.imageUrl,
     offers: {
-      "@type": "AggregateOffer",
+      '@type': 'AggregateOffer',
       availability: horse.isAvailable
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
-      priceCurrency: "USD",
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      priceCurrency: 'USD',
       highPrice: horse.price,
       lowPrice: horse.price,
     },
-  };
+  }
 
   return (
     <ProductProvider>
@@ -94,7 +94,7 @@ export default async function HorsePage(props: {
               <Gallery
                 images={[
                   {
-                    src: horse.imageUrl || "",
+                    src: horse.imageUrl || '',
                     altText: horse.name,
                   },
                 ]}
@@ -112,7 +112,7 @@ export default async function HorsePage(props: {
       </div>
       <Footer />
     </ProductProvider>
-  );
+  )
 }
 
 // async function RelatedProducts({ id }: { id: string }) {

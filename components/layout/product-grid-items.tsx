@@ -1,12 +1,12 @@
-import { GridItem } from "@/components/grid/grid";
-import { GridTileImage } from "@/components/grid/tile";
-import { Doc } from "@/convex/_generated/dataModel";
-import Link from "next/link";
+import { GridItem } from '@/components/grid/grid'
+import { GridTileImage } from '@/components/grid/tile'
+import { Doc } from '@/convex/_generated/dataModel'
+import Link from 'next/link'
 
 export default function ProductGridItems({
   horses,
 }: {
-  horses: Doc<"horses">[];
+  horses: Doc<'horses'>[]
 }) {
   return (
     <>
@@ -22,9 +22,9 @@ export default function ProductGridItems({
               label={{
                 title: horse.name,
                 amount: horse.price.toString(),
-                currencyCode: "USD",
+                currencyCode: 'USD',
               }}
-              src={horse.imageUrl || ""}
+              src={horse.imageUrl || ''}
               fill
               sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
             />
@@ -32,5 +32,5 @@ export default function ProductGridItems({
         </GridItem>
       ))}
     </>
-  );
+  )
 }

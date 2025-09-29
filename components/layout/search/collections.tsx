@@ -1,16 +1,16 @@
-import clsx from "clsx";
-import { Suspense } from "react";
+import clsx from 'clsx'
+import { Suspense } from 'react'
 
-import FilterList from "./filter";
+import FilterList from './filter'
 
 async function CollectionList() {
-  const collections = [{ title: "Collections", path: "/" }];
-  return <FilterList list={collections} title="Collections" />;
+  const collections = [{ title: 'Collections', path: '/' }]
+  return <FilterList list={collections} title="Collections" />
 }
 
-const skeleton = "mb-3 h-4 w-5/6 animate-pulse rounded-sm";
-const activeAndTitles = "bg-neutral-800 dark:bg-neutral-300";
-const items = "bg-neutral-400 dark:bg-neutral-700";
+const skeleton = 'mb-3 h-4 w-5/6 animate-pulse rounded-sm'
+const activeAndTitles = 'bg-neutral-800 dark:bg-neutral-300'
+const items = 'bg-neutral-400 dark:bg-neutral-700'
 
 export default function Collections() {
   return (
@@ -32,5 +32,5 @@ export default function Collections() {
     >
       <CollectionList />
     </Suspense>
-  );
+  )
 }

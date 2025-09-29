@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Fragment, Suspense, useEffect, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 
 import Search, { SearchSkeleton } from "./search";
 import { MenuIcon, XIcon } from "lucide-react";
@@ -42,6 +43,16 @@ export default function MobileMenu({
         <MenuIcon className="h-4" />
       </button>
         <Dialog onClose={closeMobileMenu} className="relative z-50">
+          <Transition
+            as={Fragment}
+            show={isOpen}
+            enter="transition-all ease-in-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-all ease-in-out duration-300"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
           <Transition.Child
             as={Fragment}
             enter="transition-all ease-in-out duration-300"
@@ -98,8 +109,8 @@ export default function MobileMenu({
               </div>
             </Dialog.Panel>
           </Transition.Child>
+          </Transition>
         </Dialog>
-      </Transition>
     </>
   );
 }

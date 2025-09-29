@@ -1,10 +1,10 @@
-import { components } from "./_generated/api";
-import { Resend } from "@convex-dev/resend";
-import { ActionCtx, internalMutation } from "./_generated/server";
+import { components } from './_generated/api'
+import { Resend } from '@convex-dev/resend'
+import { ActionCtx, internalMutation } from './_generated/server'
 
 export const resend: Resend = new Resend(components.resend, {
   testMode: false,
-});
+})
 
 export const sendResetPassword = async (
   ctx: ActionCtx,
@@ -12,15 +12,15 @@ export const sendResetPassword = async (
     to,
     url,
   }: {
-    to: string;
-    url: string;
-  },
+    to: string
+    url: string
+  }
 ) => {
-  console.log("Sending reset password email to", to, url);
+  console.log('Sending reset password email to', to, url)
   await resend.sendEmail(ctx, {
-    from: "System <system@cavalli.pl>",
+    from: 'System <system@cavalli.pl>',
     to,
-    subject: "Reset your password",
+    subject: 'Reset your password',
     html: `
       <div style="font-family: 'Poppins', sans-serif; max-width: 480px; margin: 0 auto; color: #1a1a1a; background: #faf7f5; padding: 32px;">
         <h2 style="color: #1a1a1a; font-size: 24px; font-weight: 600; margin-bottom: 16px;">Reset your password</h2>
@@ -61,5 +61,5 @@ export const sendResetPassword = async (
         </p>
       </div>
     `,
-  });
-};
+  })
+}
