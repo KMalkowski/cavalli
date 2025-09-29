@@ -36,10 +36,11 @@ const horseDataValidator = v.object({
   trainingLevel: v.optional(v.string()),
   healthStatus: v.optional(
     v.union(
-      v.literal('healthy'),
-      v.literal('injured'),
-      v.literal('unrideable'),
-      v.literal('unknown')
+      v.literal('zdrowy'),
+      v.literal('chory'),
+      v.literal('kontuzjowany'),
+      v.literal('niejezdny'),
+      v.literal('nieznany')
     )
   ),
 
@@ -155,6 +156,60 @@ export const getById = query({
   },
 })
 
+export const getImages = query({
+  args: { horseId: v.id('horses') },
+  returns: v.array(
+    v.object({
+      _id: v.id('horseImages'),
+      _creationTime: v.number(),
+      horseId: v.id('horses'),
+      imageUrl: v.string(),
+      isPrimary: v.boolean(),
+      altText: v.optional(v.string()),
+    })
+  ),
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query('horseImages')
+      .withIndex('by_horse', (q) => q.eq('horseId', args.horseId))
+      .order('asc')
+      .collect()
+  },
+})
+
+export const migrateExistingImages = mutation({
+  args: {},
+  returns: v.string(),
+  handler: async (ctx) => {
+    // Get all horses that have imageUrl but no entries in horseImages
+    const horses = await ctx.db.query('horses').collect()
+    let migratedCount = 0
+
+    for (const horse of horses) {
+      if (horse.imageUrl) {
+        // Check if this horse already has images in horseImages table
+        const existingImages = await ctx.db
+          .query('horseImages')
+          .withIndex('by_horse', (q) => q.eq('horseId', horse._id))
+          .collect()
+
+        // Only migrate if no images exist in horseImages table
+        if (existingImages.length === 0) {
+          await ctx.db.insert('horseImages', {
+            horseId: horse._id,
+            imageUrl: horse.imageUrl,
+            isPrimary: true,
+            altText: `${horse.name} - główne zdjęcie`,
+          })
+          migratedCount++
+        }
+      }
+    }
+
+    return `Migrated ${migratedCount} horses' images to horseImages table`
+  },
+})
+
 export const getBreeds = query({
   args: {},
   handler: async (ctx) => {
@@ -260,6 +315,29 @@ export const saveFromScraping = mutation({
     try {
       const horseId = await ctx.db.insert('horses', horseRecord)
       console.log('Scraped horse saved successfully with ID:', horseId)
+
+      // Save all images to horseImages table
+      const allImages = args.horseData.images || []
+      if (
+        args.horseData.imageUrl &&
+        !allImages.includes(args.horseData.imageUrl)
+      ) {
+        allImages.unshift(args.horseData.imageUrl) // Add single imageUrl if not in images array
+      }
+
+      for (let i = 0; i < allImages.length; i++) {
+        const imageUrl = allImages[i]
+        if (imageUrl) {
+          await ctx.db.insert('horseImages', {
+            horseId: horseId,
+            imageUrl: imageUrl,
+            isPrimary: i === 0, // First image is primary
+            altText: `${args.horseData.name} - zdjęcie ${i + 1}`,
+          })
+        }
+      }
+
+      console.log(`Saved ${allImages.length} images for horse:`, horseId)
 
       return horseId
     } catch (error) {

@@ -1,97 +1,104 @@
 'use client'
 
-import { GridTileImage } from '@/components/grid/tile'
-import { useProduct, useUpdateURL } from '@/components/product/product-context'
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
 import Image from 'next/image'
+import { useState, useRef } from 'react'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from '@/components/ui/carousel'
+import { cn } from '@/lib/utils'
 
 export function Gallery({
   images,
 }: {
   images: { src: string; altText: string }[]
 }) {
-  const { state, updateImage } = useProduct()
-  const updateURL = useUpdateURL()
-  const imageIndex = state.image ? parseInt(state.image) : 0
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [api, setApi] = useState<CarouselApi>()
 
-  const nextImageIndex = imageIndex + 1 < images.length ? imageIndex + 1 : 0
-  const previousImageIndex =
-    imageIndex === 0 ? images.length - 1 : imageIndex - 1
+  if (!images || images.length === 0) {
+    return (
+      <div className="relative flex aspect-square h-full max-h-[550px] w-full items-center justify-center overflow-hidden bg-gray-100">
+        <p className="text-gray-500">Brak obrazów</p>
+      </div>
+    )
+  }
 
-  const buttonClassName =
-    'h-full px-6 transition-all ease-in-out hover:scale-110 hover:text-black dark:hover:text-white flex items-center justify-center'
+  const handleThumbnailClick = (index: number) => {
+    if (api) {
+      api.scrollTo(index)
+    }
+  }
 
   return (
-    <form>
-      <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden">
-        {images[imageIndex] && (
-          <Image
-            className="h-full w-full object-contain"
-            fill
-            sizes="(min-width: 1024px) 66vw, 100vw"
-            alt={images[imageIndex]?.altText as string}
-            src={images[imageIndex]?.src as string}
-            priority={true}
-          />
+    <div className="w-full">
+      {/* Main Carousel */}
+      <Carousel
+        className="w-full"
+        opts={{
+          align: 'start',
+        }}
+        setApi={(carouselApi) => {
+          setApi(carouselApi)
+          if (carouselApi) {
+            carouselApi.on('select', () => {
+              setCurrentIndex(carouselApi.selectedScrollSnap())
+            })
+          }
+        }}
+      >
+        <CarouselContent className="aspect-square">
+          {images.map((image, index) => (
+            <CarouselItem key={image.src}>
+              <div className="relative aspect-square h-full max-h-[550px] w-full content-center overflow-hidden rounded-lg md:max-h-none">
+                <img
+                  src={image.src}
+                  alt={image.altText}
+                  className="object-contain"
+                  sizes="(min-width: 1024px) 66vw, 100vw"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {images.length > 1 && (
+          <>
+            <CarouselPrevious className="left-4" />
+            <CarouselNext className="right-4" />
+          </>
         )}
+      </Carousel>
 
-        {images.length > 1 ? (
-          <div className="absolute bottom-[15%] flex w-full justify-center">
-            <div className="mx-auto flex h-11 items-center rounded-full border border-white bg-neutral-50/80 text-neutral-500 backdrop-blur-sm dark:border-black dark:bg-neutral-900/80">
+      {/* Thumbnail Navigation */}
+      {images.length > 1 && (
+        <div className="mt-4 flex justify-center">
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {images.map((image, index) => (
               <button
-                formAction={() => {
-                  const newState = updateImage(previousImageIndex.toString())
-                  updateURL(newState)
-                }}
-                aria-label="Previous product image"
-                className={buttonClassName}
+                key={image.src}
+                onClick={() => handleThumbnailClick(index)}
+                className={cn(
+                  'relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-all hover:opacity-80',
+                  currentIndex === index
+                    ? 'border-blue-500 ring-2 ring-blue-200'
+                    : 'border-gray-200'
+                )}
               >
-                <ArrowLeftIcon className="h-5" />
+                <img
+                  src={image.src}
+                  alt={image.altText}
+                  className="object-cover"
+                  sizes="64px"
+                />
               </button>
-              <div className="mx-1 h-6 w-px bg-neutral-500"></div>
-              <button
-                formAction={() => {
-                  const newState = updateImage(nextImageIndex.toString())
-                  updateURL(newState)
-                }}
-                aria-label="Next product image"
-                className={buttonClassName}
-              >
-                <ArrowRightIcon className="h-5" />
-              </button>
-            </div>
+            ))}
           </div>
-        ) : null}
-      </div>
-
-      {images.length > 1 ? (
-        <ul className="my-12 flex flex-wrap items-center justify-center gap-2 overflow-auto py-1 lg:mb-0">
-          {images.map((image, index) => {
-            const isActive = index === imageIndex
-
-            return (
-              <li key={image.src} className="h-20 w-20">
-                <button
-                  formAction={() => {
-                    const newState = updateImage(index.toString())
-                    updateURL(newState)
-                  }}
-                  aria-label="Select product image"
-                  className="h-full w-full"
-                >
-                  <GridTileImage
-                    alt={image.altText}
-                    src={image.src}
-                    width={80}
-                    height={80}
-                    active={isActive}
-                  />
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      ) : null}
-    </form>
+        </div>
+      )}
+    </div>
   )
 }

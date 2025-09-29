@@ -4,19 +4,7 @@ import { Card } from '../ui/card'
 import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
 import { Heart } from 'lucide-react'
-
-const getGenderBadgeClasses = (gender: string) => {
-  switch (gender.toLowerCase()) {
-    case 'ogier':
-      return 'bg-blue-500 text-white border-blue-500'
-    case 'klacz':
-      return 'bg-pink-500 text-white border-pink-500'
-    case 'wałach':
-      return 'bg-gray-200 text-gray-800 border-gray-300'
-    default:
-      return 'bg-gray-100 text-gray-600 border-gray-200'
-  }
-}
+import { getGenderBadgeClasses } from '@/lib/horse-utils'
 
 export default function ProductListItems({
   horses,
@@ -67,6 +55,14 @@ export default function ProductListItems({
                     ) : null}
                     {horse.height && horse.height > 0 ? (
                       <Badge variant="outline">{`${horse.height} cm`}</Badge>
+                    ) : null}
+                    {horse.disciplines && horse.disciplines.length > 0 ? (
+                      <Badge variant="outline">
+                        {horse.disciplines.join(', ')}
+                      </Badge>
+                    ) : null}
+                    {horse.purpose && horse.purpose.trim() !== '' ? (
+                      <Badge variant="outline">{horse.purpose}</Badge>
                     ) : null}
                   </div>
                 </div>

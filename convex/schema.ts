@@ -35,10 +35,11 @@ const applicationTables = {
     trainingLevel: v.optional(v.string()),
     healthStatus: v.optional(
       v.union(
-        v.literal('healthy'),
-        v.literal('injured'),
-        v.literal('unrideable'),
-        v.literal('unknown')
+        v.literal('zdrowy'),
+        v.literal('chory'),
+        v.literal('kontuzjowany'),
+        v.literal('niejezdny'),
+        v.literal('nieznany')
       )
     ),
     father: v.optional(v.string()),
@@ -96,7 +97,7 @@ const applicationTables = {
 
   horseImages: defineTable({
     horseId: v.id('horses'),
-    storageId: v.id('_storage'),
+    imageUrl: v.string(),
     isPrimary: v.boolean(),
     altText: v.optional(v.string()),
   }).index('by_horse', ['horseId']),

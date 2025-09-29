@@ -202,7 +202,26 @@ button {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+  }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Better hyphenation for tables */
+  table td {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    /* Force hyphenation for Polish text */
+    hyphenate-limit-chars: 6 3 3;
+    hyphenate-limit-lines: 2;
+    hyphenate-limit-last: always;
   }
 }

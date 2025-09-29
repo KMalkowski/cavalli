@@ -38,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <ConvexAuthNextjsServerProvider>
-      <html lang="en">
+      <html lang="pl">
         <body className={`${poppins.variable} antialiased`}>
           <ConvexClientProvider>
             <Navbar />

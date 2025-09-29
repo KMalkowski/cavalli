@@ -45,7 +45,7 @@ const horseOfferSchema = z.object({
   disciplines: z.array(z.string()).optional().describe('Dyscypliny sportowe'),
   trainingLevel: z.string().optional().describe('Poziom wyszkolenia'),
   healthStatus: z
-    .enum(['healthy', 'injured', 'unrideable', 'unknown'])
+    .enum(['zdrowy', 'chory', 'kontuzjowany', 'niejezdny', 'nieznany'])
     .optional()
     .describe('Stan zdrowia'),
 
@@ -53,7 +53,7 @@ const horseOfferSchema = z.object({
   father: z.string().optional().describe('Ojciec konia'),
   mother: z.string().optional().describe('Matka konia'),
   pedigree: z.string().optional().describe('Rodowód'),
-  registrationNumber: z.string().optional().describe('Numer rejestracyjny'),
+  registrationNumber: z.string().optional().describe('Numer paszportu'),
 
   // Source and listing information
   sourceUrl: z.string().describe('URL oryginalnego ogłoszenia'),
@@ -282,7 +282,7 @@ export const generateStructuredData = action({
         - father: imię ojca jeśli podane
         - mother: imię matki jeśli podane
         - pedigree: informacje o rodowodzie
-        - registrationNumber: numer rejestracyjny
+        - registrationNumber: numer paszportu
         
         ŹRÓDŁO:
         - sourceUrl: URL ogłoszenia
