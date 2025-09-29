@@ -3,6 +3,7 @@ import Link from "next/link";
 import FooterMenu from "@/components/layout/footer-menu";
 import { Suspense } from "react";
 import LogoSquare from "../logo-square";
+import FirecrawlTester from "../firecrawl-tester";
 
 const { COMPANY_NAME, SITE_NAME } = process.env;
 
@@ -27,6 +28,7 @@ export default async function Footer() {
             <LogoSquare size="sm" />
             <span className="uppercase">{SITE_NAME}</span>
           </Link>
+       
         </div>
         <Suspense
           fallback={
@@ -67,6 +69,7 @@ export default async function Footer() {
           <p>
             <a href="https://github.com/vercel/commerce">View the source</a>
           </p>
+          <FirecrawlTester />
           <p className="md:ml-auto">
             <a href="https://vercel.com" className="text-black dark:text-white">
               Created by ▲ Vercel

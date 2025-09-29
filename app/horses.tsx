@@ -37,10 +37,11 @@ export default function Horses() {
             background: "#fafafa",
           }}
         >
+          <img src={horse.imageUrl || ""} alt={horse.name} />
           <h3 style={{ margin: "0 0 0.5rem 0" }}>{horse.name}</h3>
           <div>Breed: {horse.breed}</div>
-          <div>Price: ${horse.price}</div>
-          <div>Height: {horse.height} cm</div>
+          <div>Price: {horse.price} {horse.currency}</div>
+          <div>Height: {horse.height ? `${horse.height} cm` : "N/A"}</div>
         </div>
       ))}
     </div>
