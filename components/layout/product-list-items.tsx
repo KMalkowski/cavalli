@@ -26,13 +26,13 @@ export default function ProductListItems({
   return (
     <>
       {horses.map((horse) => (
-        <Card key={horse._id} className="mb-4">        
+        <Card key={horse._id} className="mb-4 transition-all duration-300 ease-out hover:brightness-105 hover:ring-2 hover:ring-blue-500/20 hover:ring-offset-2 ">        
           <div className="bg-background relative md:flex flex-1 gap-8 px-6">
-            <div className="bg-muted relative w-full h-64 shrink-0 overflow-hidden rounded-lg md:h-64 md:w-64">
+            <div className="bg-muted relative w-full h-64 shrink-0 overflow-hidden rounded-lg md:h-64 md:w-64 group">
               <img 
                 src={horse.imageUrl || ""} 
                 alt={horse.name} 
-                className="object-cover w-full h-full md:h-64 md:w-64"
+                className="object-cover w-full h-full md:h-64 md:w-64 transition-transform duration-300 ease-out group-hover:scale-105"
                 style={{ width: "100%", height: "100%" }}
               />
             </div>
