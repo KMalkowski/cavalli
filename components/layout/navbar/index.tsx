@@ -1,11 +1,10 @@
 import LogoSquare from '@/components/logo-square'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import MobileMenu from './mobile-menu'
 import Search, { SearchSkeleton } from './search'
 import AuthControl from './auth-control'
 import { Button } from '@/components/ui/button'
-import { Plus, Heart } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { FavoritesButton } from './favorites-button'
 
 const { SITE_NAME } = process.env
