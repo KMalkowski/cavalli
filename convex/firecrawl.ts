@@ -40,9 +40,9 @@ const horseOfferSchema = z.object({
     .optional()
     .describe('Maść konia'),
 
-  price: z.number().describe('Cena w złotych'),
+  price: z.number().describe('Cena'),
   currency: z.string().default('PLN').describe('Waluta'),
-  isAvailable: z.boolean().default(true).describe('Czy koń jest dostępny'),
+  isAvailable: z.boolean().default(true),
 
   location: z.string().optional().describe('Ogólna lokalizacja'),
   country: z.string().optional().describe('Kraj'),
@@ -343,7 +343,6 @@ export const generateStructuredData = action({
       }
     } catch (error) {
       console.error('Error generating structured data:', error)
-      throw new Error(`Failed to generate structured data: ${error}`)
     }
   },
 })
