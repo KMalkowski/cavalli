@@ -23,9 +23,11 @@ type SignInFormData = {
 
 export function SignInForm({
   className,
-  setAuthMode,
+  setAuthModeAction,
   ...props
-}: React.ComponentProps<'div'> & { setAuthMode: (mode: AuthMode) => void }) {
+}: React.ComponentProps<'div'> & {
+  setAuthModeAction: (mode: AuthMode) => void
+}) {
   const form = useForm<SignInFormData>({
     defaultValues: {
       email: '',
@@ -121,7 +123,7 @@ export function SignInForm({
                   <div className="flex items-center">
                     <FormLabel>Hasło</FormLabel>
                     <div
-                      onClick={() => setAuthMode('forgot-password')}
+                      onClick={() => setAuthModeAction('forgot-password')}
                       className="ml-auto cursor-pointer text-sm underline-offset-4 hover:underline"
                     >
                       Zapomniałeś hasła?

@@ -13,7 +13,9 @@ export function Auth({ className, ...props }: React.ComponentProps<'div'>) {
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      {authMode === 'sign-in' ? <SignInForm setAuthMode={setAuthMode} /> : null}
+      {authMode === 'sign-in' ? (
+        <SignInForm setAuthModeAction={setAuthMode} />
+      ) : null}
       {authMode === 'sign-up' ? <SignUpForm /> : null}
       {authMode === 'forgot-password' ? <ForgotPasswordForm /> : null}
 
