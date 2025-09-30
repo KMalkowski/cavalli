@@ -1,12 +1,15 @@
 'use client'
 
 import clsx from 'clsx'
-import { Menu } from 'lib/shopify/types'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-export function FooterMenuItem({ item }: { item: Menu }) {
+export function FooterMenuItem({
+  item,
+}: {
+  item: { title: string; path: string }
+}) {
   const pathname = usePathname()
   const [active, setActive] = useState(pathname === item.path)
 
@@ -31,13 +34,17 @@ export function FooterMenuItem({ item }: { item: Menu }) {
   )
 }
 
-export default function FooterMenu({ menu }: { menu: Menu[] }) {
+export default function FooterMenu({
+  menu,
+}: {
+  menu: { title: string; path: string }[]
+}) {
   if (!menu.length) return null
 
   return (
     <nav>
       <ul>
-        {menu.map((item: Menu) => {
+        {menu.map((item: { title: string; path: string }) => {
           return <FooterMenuItem key={item.title} item={item} />
         })}
       </ul>

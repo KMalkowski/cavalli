@@ -4,7 +4,6 @@ import { Card } from '../ui/card'
 
 export function GridTileImage({
   label,
-  ...props
 }: {
   active?: boolean
   label?: {
