@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as breeds from "../breeds.js";
 import type * as email from "../email.js";
 import type * as favorites from "../favorites.js";
 import type * as firecrawl from "../firecrawl.js";
@@ -32,6 +33,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  breeds: typeof breeds;
   email: typeof email;
   favorites: typeof favorites;
   firecrawl: typeof firecrawl;

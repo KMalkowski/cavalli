@@ -1,7 +1,6 @@
 'use client'
-import * as React from 'react'
-import { X } from 'lucide-react'
 
+import * as React from 'react'
 import {
   Sidebar,
   SidebarContent,
@@ -11,29 +10,8 @@ import {
 } from '@/components/ui/sidebar'
 import { SidebarSelectFilter } from './sidebar-select-filter'
 import { SidebarRangeFilter } from './sidebar-range-filter'
-import { Button } from '@/components/ui/button'
-import { useRouter, useSearchParams } from 'next/navigation'
 
-const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
-  calendars: [
-    {
-      name: 'My Calendars',
-      items: ['Personal', 'Work', 'Family'],
-    },
-    {
-      name: 'Favorites',
-      items: ['Holidays', 'Birthdays'],
-    },
-    {
-      name: 'Other',
-      items: ['Travel', 'Reminders', 'Deadlines'],
-    },
-  ],
+export const filters = {
   purposes: {
     name: 'Przeznaczenie',
     items: ['Zaprzęgi', 'Wyścigi', 'Skoki', 'Rajdy', 'Rekreacja'],
@@ -41,37 +19,175 @@ const data = {
   breeds: {
     name: 'Rasy koni',
     items: [
+      'Achałtekińska',
+      'American Paint Horse',
+      'Andaluzyjska',
+      'Ane Grand Noir du Berry',
+      'Appaloosa',
+      'Arden francuski',
+      'Arden polski',
+      'Arden szwedzki',
+      'Ardenofiord',
+      'Ardeńska',
+      'Austriacki koń gorącokrwisty',
+      'Baudet Poitou',
+      'Bawarska',
+      'Beberbecka',
+      'Belgijska',
+      'Berberyjska',
+      'Brandenburska',
+      'Bretońska',
+      'Budionowska',
+      'Bulońska',
+      'Cheval de selle',
+      'Clydesdale',
+      'Cob normandzki',
+      'Comtois',
+      'Czeska',
+      'Duńska',
+      'Europees Stamboek',
+      'Fallabella',
+      'Fiordzka',
+      'Francuski kuc wierzchowy',
+      'Freiberger',
+      'Fryderyksborska',
+      'Fryzyjska',
+      'Furioso',
+      'Gudbrandsdalska',
+      'Gypsy cob',
+      'Hackney',
+      'Haflinger',
+      'Hanowerska',
+      'Heska',
+      'Holsztyńska',
+      'Huculska',
+      'Irish Cob',
+      'Irlandzki koń sportowy',
+      'Kabardyńska',
+      'Katalońska',
+      'Kazachska',
+      'Kladrubska',
+      'Kłusak',
+      'Konik biłgorajski',
+      'Konik polski',
+      'Koń anglo-doński',
+      'Koń anglo-normandzki',
       'Koń arabski',
-      'Koń fryzyjski',
-      'Koń andaluzyjski',
-      'Koń hanowerski',
-      'Koń holsztyński',
-      'Koń wielkopolski',
-      'Koń śląski',
-      'Koń małopolski',
-      'Koń huculski',
-      'Koń konik polski',
+      'Koń arabski chowany w czystości krwi',
+      'Koń doński',
+      'Koń graditzki',
+      'Koń Jutlandzki',
+      'Koń lidzbarski',
+      'Koń mazurski',
+      'Koń norycki',
+      'Koń pinto',
+      'Koń pomorski',
+      'Koń poznański',
+      'Koń Przewalskiego',
+      'Koń sokólski',
+      'Koń sztumski',
       'Koń trakeński',
-      'Koń oldenburski',
-      'Koń lipicański',
-      'Koń fiordzki',
-      'Koń belgijski',
-      'Koń szetlandzki',
-      'Koń angloarabski',
-      'Koń pełnej krwi angielskiej',
-      'Koń appaloosa',
-      'Koń quarter horse',
-      'Koń lusitano',
-      'Koń fiński',
-      'Koń norweski',
-      'Koń czystej krwi arabskiej',
-      'Koń tinker',
-      'Koń achał-tekiński',
-      'Koń camargue',
-      'Koń islandzki',
-      'Koń haflinger',
-      'Koń przewalskiego',
-      'Koń mustang',
+      'Koń wschodniopruski',
+      'Księga stadna Zangersheide',
+      'Kuc angielski',
+      'Kuc connemara',
+      'Kuc dartmoor',
+      'Kuc exmoor',
+      'Kuc Feliński',
+      'Kuc Fell',
+      'Kuc highland',
+      'Kuc islandzki',
+      'Kuc Lewitzer',
+      'Kuc new forest',
+      'Kuc niemiecki',
+      'Kuc szetlandzki',
+      'Kuc walijski',
+      'Kuc wierzchowy',
+      'Kustyjska',
+      'KWPN',
+      'LA SILLA',
+      'Le cheval de sport Belge',
+      'Lewitzer',
+      'Lipicańska',
+      'Litewska',
+      'Luksemburska gorącokrwista',
+      'Lusitano',
+      'Łotewska',
+      'Łotewska',
+      'Małopolska',
+      'Maremmano',
+      'Meckenburska',
+      'Missouri Fox Trotter',
+      'Morgan',
+      'Mur insulan',
+      'Nederlandse Appaloosa Stamboek',
+      'Niemiecka wierzchowa',
+      'Niemiecki koń sportowy',
+      'NWP',
+      'Oldenburska',
+      'Oryginalny arab',
+      'Pełna krew angielska',
+      'Perszeron',
+      'Polski koń szlachetny półkrwi',
+      'Polski koń zimnokrwisty',
+      'Polski kuc szetlandzki',
+      'Półkrew angielska',
+      'Półkrew angloarabska',
+      'Półkrew arabska',
+      'Północno-szwedzka',
+      'Pura Raza Espanola',
+      'Quarter horse',
+      'Reńska',
+      'Saksońska',
+      'Schweres warmblud',
+      'Selle francais',
+      'Shagya',
+      'Shire',
+      'Słowacki koń gorącokrwisty',
+      'Szwajcarska',
+      'Szwedzka',
+      'Śląska',
+      'Tennessee Walking Horse',
+      'Tierska',
+      'Tinker',
+      'Toryjska',
+      'Trakeńska',
+      'Turyngijska',
+      'Typ koń mały',
+      'Typ kuc',
+      'Typ pogrubiony',
+      'Typ prymitywny',
+      'Typ szlachetny',
+      'Typ zimnokrwisty',
+      'Ukraińska',
+      'Warmblutschecke',
+      'Westfalska',
+      'Węgierska półkrew',
+      'Wielkopolska',
+      'Wirtemberska',
+      'Włoska wierzchowa',
+      'Wschodniofryzyjska',
+      'Žemaitukai',
+      'Zimnokrwista',
+      'Zweibrücker',
+      'Rasa nieznana',
+    ],
+  },
+  colors: {
+    name: 'Maść',
+    items: [
+      'Gniada',
+      'Kasztanowata',
+      'Siwa',
+      'Ciemnogniada',
+      'Kara',
+      'Skarogniada',
+      'Srokata',
+      'Bułana',
+      'Myszata',
+      'Tarantowata',
+      'Izabelowata',
+      'Dereszowata',
     ],
   },
   genders: {
@@ -80,7 +196,13 @@ const data = {
   },
   healthStatuses: {
     name: 'Stan zdrowia',
-    items: ['Zdrowy', 'Kontuzjowany', 'Niezdatny do jazdy', 'Nieznany'],
+    items: [
+      'Zdrowy',
+      'Chory',
+      'Kontuzjowany',
+      'Niezdatny do jazdy',
+      'Nieznany',
+    ],
   },
   trainingLevels: {
     name: 'Edukacja',
@@ -95,68 +217,37 @@ const data = {
       'Klasa CC',
     ],
   },
-  ages: {
-    name: 'Wiek',
-    items: [
-      '1-3 lata',
-      '3-5 lat',
-      '5-7 lat',
-      '7-10 lat',
-      '10-15 lat',
-      '15-20 lat',
-      '20-25 lat',
-      '25-30 lat',
-      '30-35 lat',
-      '35-40 lat',
-      '40-45 lat',
-      '45-50 lat',
-      '50-55 lat',
-      '55-62 lat',
-    ],
-  },
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const router = useRouter()
-  const [searchParams] = useSearchParams()
-
-  const anyActive = !!searchParams
-
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="border-sidebar-border h-16 border-b">
-        <div className="flex items-center justify-between">
-          <h1 className="my-auto pl-2 text-xl font-semibold">Filtruj</h1>
-          {anyActive && (
-            <Button
-              variant="outline"
-              size="icon"
-              className="mr-2"
-              onClick={() => {
-                router.push('/')
-              }}
-            >
-              <X />
-            </Button>
-          )}
+      <SidebarHeader className="border-sidebar-border h-16 justify-center border-b">
+        <div className="flex items-center justify-between px-2">
+          <h1 className="text-xl font-semibold">Filtruj</h1>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarSeparator className="mx-0" />
         <SidebarSelectFilter
-          name={data.breeds.name}
-          items={data.breeds.items}
+          name={filters.breeds.name}
+          items={filters.breeds.items}
           paramKey="breeds"
           defaultOpen={true}
         />
         <SidebarSelectFilter
-          name={data.genders.name}
-          items={data.genders.items}
+          name={filters.genders.name}
+          items={filters.genders.items}
           paramKey="genders"
         />
         <SidebarSelectFilter
-          name={data.purposes.name}
-          items={data.purposes.items}
+          name={filters.colors.name}
+          items={filters.colors.items}
+          paramKey="colors"
+        />
+        <SidebarSelectFilter
+          name={filters.purposes.name}
+          items={filters.purposes.items}
           paramKey="purposes"
           defaultOpen={false}
         />
@@ -170,8 +261,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           integer={true}
         />
         <SidebarSelectFilter
-          name={data.healthStatuses.name}
-          items={data.healthStatuses.items}
+          name={filters.healthStatuses.name}
+          items={filters.healthStatuses.items}
           paramKey="healthStatuses"
           defaultOpen={false}
         />
@@ -185,15 +276,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           integer={true}
         />
         <SidebarSelectFilter
-          name={data.trainingLevels.name}
-          items={data.trainingLevels.items}
+          name={filters.trainingLevels.name}
+          items={filters.trainingLevels.items}
           paramKey="trainingLevels"
           defaultOpen={false}
         />
-        <SidebarSelectFilter
-          name={data.ages.name}
-          items={data.ages.items}
-          paramKey="ages"
+        <SidebarRangeFilter
+          name="Wiek"
+          minParamKey="ageMin"
+          maxParamKey="ageMax"
+          placeholderMin="Min"
+          placeholderMax="Max"
+          integer={true}
           defaultOpen={false}
         />
       </SidebarContent>
