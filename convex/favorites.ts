@@ -6,8 +6,7 @@ import { authComponent } from './auth'
 export const getUserFavorites = query({
   args: {},
   handler: async (ctx) => {
-    const user = await authComponent.getAuthUser(ctx)
-    const userId = user?._id
+    const userId = await getAuthUserId(ctx)
     if (!userId) return []
 
     const favorites = await ctx.db
@@ -36,8 +35,7 @@ export const getUserFavorites = query({
 export const isFavorite = query({
   args: { horseId: v.id('horses') },
   handler: async (ctx, args) => {
-    const user = await authComponent.getAuthUser(ctx)
-    const userId = user?._id
+    const userId = await getAuthUserId(ctx)
     if (!userId) return false
 
     const favorite = await ctx.db
@@ -54,8 +52,7 @@ export const isFavorite = query({
 export const toggle = mutation({
   args: { horseId: v.id('horses') },
   handler: async (ctx, args) => {
-    const user = await authComponent.getAuthUser(ctx)
-    const userId = user?._id
+    const userId = await getAuthUserId(ctx)
     if (!userId) {
       throw new Error('Must be authenticated to favorite horses')
     }

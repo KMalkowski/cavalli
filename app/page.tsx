@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import AuthControl from '@/components/layout/navbar/auth-control'
 import Footer from '@/components/layout/footer'
 import ResetFiltersButton from '@/components/layout/app-sidebar/reset-filters-button'
+import { FavoritesButton } from '@/components/layout/navbar/favorites-button'
 
 export const metadata = {
   title: 'Search',
@@ -42,8 +43,10 @@ export default async function SearchPage() {
           />
 
           <ResetFiltersButton />
-
-          <Link href="/new-listing-form" className="ml-auto">
+          <div className="ml-auto">
+            <FavoritesButton />
+          </div>
+          <Link href="/new-listing-form">
             <Button>
               <Plus />
             </Button>
