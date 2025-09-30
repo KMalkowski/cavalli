@@ -59,7 +59,10 @@ export function ProductDescription({ horse }: { horse: Doc<'horses'> }) {
           variant="outline"
           className="shrink-0"
         />
-        <Button asChild className="w-[calc(100%-3rem)] min-w-0">
+        <Button
+          asChild
+          className="max-w-[calc(100% - 44px)] min-w-0 flex-1 md:max-w-none"
+        >
           <Link
             href="#details-section"
             className="flex items-center justify-center gap-1 sm:gap-2"
