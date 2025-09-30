@@ -17,20 +17,6 @@ function FavoritesContent() {
     return <FavoritesSkeleton />
   }
 
-  if (favorites.length === 0) {
-    return (
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        <div className="text-center">
-          <h1 className="mb-4 text-3xl font-bold">Ulubione konie</h1>
-          <p className="text-muted-foreground">
-            Nie masz jeszcze żadnych ulubionych koni. Dodaj je, klikając
-            serduszko przy koniu.
-          </p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <>
       <header className="bg-background sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b px-4">
@@ -53,13 +39,23 @@ function FavoritesContent() {
         <h1 className="mb-8 text-3xl font-bold">
           Ulubione konie ({favorites.length})
         </h1>
-        <div className="space-y-4">
-          {favorites
-            .filter((horse) => horse !== null)
-            .map((horse) => (
-              <HorseCard key={horse._id} horse={horse} />
-            ))}
-        </div>
+
+        {favorites.length === 0 ? (
+          <div className="text-center">
+            <p className="text-muted-foreground">
+              Nie masz jeszcze żadnych ulubionych koni. Dodaj je, klikając
+              serduszko przy koniu.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {favorites
+              .filter((horse) => horse !== null)
+              .map((horse) => (
+                <HorseCard key={horse._id} horse={horse} />
+              ))}
+          </div>
+        )}
       </div>
     </>
   )
