@@ -13,19 +13,26 @@ export function HorseCard({ horse }: { horse: Doc<'horses'> }) {
       className="mb-4 transition-all duration-300 ease-out hover:ring-2 hover:ring-blue-500/20 hover:ring-offset-2 hover:brightness-105"
     >
       <div className="bg-background relative flex-1 gap-8 px-6 md:flex">
-        <div className="bg-muted group relative h-64 w-full shrink-0 overflow-hidden rounded-lg md:h-64 md:w-64">
+        <Link
+          href={`/horse/${horse._id}`}
+          className="bg-muted group relative h-64 w-full shrink-0 overflow-hidden rounded-lg md:h-64 md:w-64"
+        >
           <img
             src={horse.imageUrl || ''}
             alt={horse.name}
             className="h-full w-full scale-[101%] object-cover transition-transform duration-300 ease-out group-hover:scale-105 md:h-64 md:w-64"
             style={{ width: '100%', height: '100%' }}
           />
-        </div>
+        </Link>
         <div className="mt-4 flex min-w-0 flex-1 flex-col justify-between md:mt-0">
           <div>
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-medium">{horse.name}</h3>
+                <Link href={`/horse/${horse._id}`}>
+                  <h3 className="hover:text-primary cursor-pointer text-lg font-medium transition-colors">
+                    {horse.name}
+                  </h3>
+                </Link>
               </div>
             </div>
             <div className="text-muted-foreground my-2 text-sm">
