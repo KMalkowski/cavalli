@@ -5,7 +5,8 @@ import MobileMenu from './mobile-menu'
 import Search, { SearchSkeleton } from './search'
 import AuthControl from './auth-control'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import { Plus, Heart } from 'lucide-react'
+import { FavoritesButton } from './favorites-button'
 
 const { SITE_NAME } = process.env
 
@@ -52,6 +53,7 @@ export async function Navbar() {
           </Suspense>
         </div>
         <div className="flex justify-end gap-2 md:w-1/3">
+          <FavoritesButton />
           <Link href="/new-listing-form">
             <Button>
               <Plus />

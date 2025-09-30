@@ -20,9 +20,7 @@ export function Auth({ className, ...props }: React.ComponentProps<'div'>) {
       {authMode !== 'forgot-password' ? (
         <>
           <div className="text-center text-sm">
-            {authMode === 'sign-in'
-              ? "Don't have an account? "
-              : 'Already have an account? '}
+            {authMode === 'sign-in' ? 'Nie masz konta? ' : 'Masz już konto? '}
             <button
               onClick={() => {
                 if (authMode === 'sign-in') {
@@ -31,15 +29,22 @@ export function Auth({ className, ...props }: React.ComponentProps<'div'>) {
                   setAuthMode('sign-in')
                 }
               }}
-              className="hover:text-primary underline underline-offset-4"
+              className="hover:text-primary cursor-pointer underline underline-offset-4"
             >
-              {authMode !== 'sign-up' ? 'Sign up' : 'Sign in'}
+              {authMode !== 'sign-up' ? 'Zarejestruj się' : 'Zaloguj się'}
             </button>
           </div>
 
           <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-            By clicking continue, you agree to our{' '}
-            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+            Kontynuując, zgadzasz się z naszymi{' '}
+            <a href="#" className="cursor-pointer">
+              Warunkami Użytkowania
+            </a>{' '}
+            i{' '}
+            <a href="#" className="cursor-pointer">
+              Polityką Prywatności
+            </a>
+            .
           </div>
         </>
       ) : null}

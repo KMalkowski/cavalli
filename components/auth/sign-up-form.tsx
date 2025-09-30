@@ -38,7 +38,7 @@ export function SignUpForm({
   const onSubmit = async (data: SignUpFormData) => {
     if (data.password !== data.confirmPassword) {
       form.setError('confirmPassword', {
-        message: 'Passwords do not match',
+        message: 'Hasła nie są identyczne',
       })
       return
     }
@@ -52,7 +52,7 @@ export function SignUpForm({
       {
         onError: (error) => {
           toast.error(error.error.message)
-          console.error('Sign up failed:', error)
+          console.error('Rejestracja nie powiodła się:', error)
         },
       }
     )
@@ -64,7 +64,7 @@ export function SignUpForm({
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="grid gap-6">
         <h1 className="text-center text-xl leading-none font-semibold">
-          Create an account
+          Utwórz konto
         </h1>
         <div className="flex flex-col gap-4">
           <Button
@@ -76,8 +76,13 @@ export function SignUpForm({
                   provider: 'google',
                 })
               } catch (error) {
-                toast.error('Google sign up failed. Please try again.')
-                console.error('Google sign up failed:', error)
+                toast.error(
+                  'Rejestracja przez Google nie powiodła się. Spróbuj ponownie.'
+                )
+                console.error(
+                  'Rejestracja przez Google nie powiodła się:',
+                  error
+                )
               }
             }}
           >
@@ -87,12 +92,12 @@ export function SignUpForm({
                 fill="currentColor"
               />
             </svg>
-            Sign up with Google
+            Zarejestruj się przez Google
           </Button>
         </div>
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-card text-muted-foreground relative z-10 px-2">
-            Or continue with
+            Lub kontynuuj z
           </span>
         </div>
         <Form {...form}>
@@ -101,17 +106,17 @@ export function SignUpForm({
               control={form.control}
               name="name"
               rules={{
-                required: 'Name is required',
+                required: 'Imię jest wymagane',
                 minLength: {
                   value: 2,
-                  message: 'Name must be at least 2 characters',
+                  message: 'Imię musi mieć co najmniej 2 znaki',
                 },
               }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>Pełne imię</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input placeholder="Jan Kowalski" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,10 +126,10 @@ export function SignUpForm({
               control={form.control}
               name="email"
               rules={{
-                required: 'Email is required',
+                required: 'Email jest wymagany',
                 pattern: {
                   value: /^\S+@\S+$/i,
-                  message: 'Please enter a valid email address',
+                  message: 'Proszę podać prawidłowy adres email',
                 },
               }}
               render={({ field }) => (
@@ -133,7 +138,7 @@ export function SignUpForm({
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="m@example.com"
+                      placeholder="jan@example.com"
                       {...field}
                     />
                   </FormControl>
@@ -145,15 +150,15 @@ export function SignUpForm({
               control={form.control}
               name="password"
               rules={{
-                required: 'Password is required',
+                required: 'Hasło jest wymagane',
                 minLength: {
                   value: 8,
-                  message: 'Password must be at least 8 characters',
+                  message: 'Hasło musi mieć co najmniej 8 znaków',
                 },
               }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Hasło</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -165,11 +170,11 @@ export function SignUpForm({
               control={form.control}
               name="confirmPassword"
               rules={{
-                required: 'Please confirm your password',
+                required: 'Proszę potwierdzić hasło',
               }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>Potwierdź hasło</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -178,7 +183,7 @@ export function SignUpForm({
               )}
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating account...' : 'Create account'}
+              {isSubmitting ? 'Tworzenie konta...' : 'Utwórz konto'}
             </Button>
           </form>
         </Form>

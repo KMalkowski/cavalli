@@ -10,11 +10,19 @@ export default async function Footer() {
           <p>&copy; {currentYear} All rights reserved.</p>
           <hr className="mx-4 hidden h-4 w-[1px] border-l border-neutral-400 md:inline-block" />
           <p>
-            <a href="https://github.com/vercel/commerce">View the source</a>
+            <a
+              href="https://github.com/vercel/commerce"
+              className="cursor-pointer"
+            >
+              View the source
+            </a>
           </p>
           <FirecrawlTester />
           <p className="md:ml-auto">
-            <a href="https://vercel.com" className="text-black dark:text-white">
+            <a
+              href="https://vercel.com"
+              className="cursor-pointer text-black dark:text-white"
+            >
               Created by ▲ Vercel
             </a>
           </p>

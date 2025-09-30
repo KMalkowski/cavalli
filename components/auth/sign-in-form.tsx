@@ -52,7 +52,7 @@ export function SignInForm({
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="grid gap-6">
-        <h1 className="text-center text-xl font-bold">Welcome back</h1>
+        <h1 className="text-center text-xl font-bold">Witaj ponownie</h1>
         <div className="flex flex-col gap-4">
           <Button
             variant="outline"
@@ -63,8 +63,10 @@ export function SignInForm({
                   provider: 'google',
                 })
               } catch (error) {
-                toast.error('Google sign in failed. Please try again.')
-                console.error('Google sign in failed:', error)
+                toast.error(
+                  'Logowanie przez Google nie powiodło się. Spróbuj ponownie.'
+                )
+                console.error('Logowanie przez Google nie powiodło się:', error)
               }
             }}
           >
@@ -74,12 +76,12 @@ export function SignInForm({
                 fill="currentColor"
               />
             </svg>
-            Login with Google
+            Zaloguj się przez Google
           </Button>
         </div>
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-card text-muted-foreground relative z-10 px-2">
-            Or use your email
+            Lub użyj swojego adresu email
           </span>
         </div>
         <Form {...form}>
@@ -88,10 +90,10 @@ export function SignInForm({
               control={form.control}
               name="email"
               rules={{
-                required: 'Email is required',
+                required: 'Email jest wymagany',
                 pattern: {
                   value: /^\S+@\S+$/i,
-                  message: 'Please enter a valid email address',
+                  message: 'Proszę podać prawidłowy adres email',
                 },
               }}
               render={({ field }) => (
@@ -100,7 +102,7 @@ export function SignInForm({
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="m@example.com"
+                      placeholder="jan@example.com"
                       {...field}
                     />
                   </FormControl>
@@ -112,17 +114,17 @@ export function SignInForm({
               control={form.control}
               name="password"
               rules={{
-                required: 'Password is required',
+                required: 'Hasło jest wymagane',
               }}
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center">
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Hasło</FormLabel>
                     <div
                       onClick={() => setAuthMode('forgot-password')}
                       className="ml-auto cursor-pointer text-sm underline-offset-4 hover:underline"
                     >
-                      Forgot your password?
+                      Zapomniałeś hasła?
                     </div>
                   </div>
                   <FormControl>
@@ -133,7 +135,7 @@ export function SignInForm({
               )}
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Signing in...' : 'Login'}
+              {isSubmitting ? 'Logowanie...' : 'Zaloguj się'}
             </Button>
           </form>
         </Form>

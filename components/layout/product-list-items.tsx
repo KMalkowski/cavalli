@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Card } from '../ui/card'
 import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
-import { Heart } from 'lucide-react'
+import { HeartButton } from '../ui/heart-button'
 import { getGenderBadgeClasses } from '@/lib/horse-utils'
 
 export default function ProductListItems({
@@ -73,9 +73,7 @@ export default function ProductListItems({
                 </div>
               </div>
               <div className="flex justify-end gap-2">
-                <Button variant="outline" size="icon" className="shrink-0">
-                  <Heart className="h-4 w-4" />
-                </Button>
+                <HeartButton horseId={horse._id} />
                 <Button asChild className="w-full md:w-auto">
                   <Link href={`/horse/${horse._id}`}>Szczegóły</Link>
                 </Button>
