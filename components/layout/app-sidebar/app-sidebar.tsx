@@ -146,6 +146,7 @@ export const filters = {
       'Szwajcarska',
       'Szwedzka',
       'Śląska',
+      'SP',
       'Tennessee Walking Horse',
       'Tierska',
       'Tinker',

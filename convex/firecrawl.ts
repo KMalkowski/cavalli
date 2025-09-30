@@ -40,9 +40,9 @@ const horseOfferSchema = z.object({
     .optional()
     .describe('Maść konia'),
 
-  price: z.number().describe('Cena w złotych'),
+  price: z.number().describe('Cena'),
   currency: z.string().default('PLN').describe('Waluta'),
-  isAvailable: z.boolean().default(true).describe('Czy koń jest dostępny'),
+  isAvailable: z.boolean().default(true),
 
   location: z.string().optional().describe('Ogólna lokalizacja'),
   country: z.string().optional().describe('Kraj'),
@@ -269,68 +269,9 @@ export const generateStructuredData = action({
 
     try {
       const { object } = await generateObject({
-        model: openai('gpt-4o'),
+        model: openai('gpt-5-mini'),
         schema: horseOfferSchema,
         prompt: `Przeanalizuj poniższą treść ogłoszenia o sprzedaży konia z OLX i wyciągnij z niej wszystkie istotne informacje zgodnie ze schematem bazy danych.
-
-        Treść ogłoszenia (markdown):
-        ${args.markdownContent}
-        
-        URL ogłoszenia: ${args.offerUrl}
-        
-        INSTRUKCJE WYCIĄGANIA DANYCH:
-        
-        PODSTAWOWE INFORMACJE:
-        - name: tytuł/nazwa konia z ogłoszenia
-        - breed: rasa konia (np. "Arabski", "Fryzyjski", "Śląski", "Zimnokrwisty")
-        - age: wiek w latach (tylko liczba)
-        - height: wysokość w cm (tylko liczba)
-        - gender: płeć - Ogier/Klacz/Wałach
-        - color: maść konia (np. "kasztanowy", "siwy", "gniady")
-        
-        CENY I DOSTĘPNOŚĆ:
-        - price: cena w złotych (tylko liczba)
-        - currency: "PLN"
-        - isAvailable: true (domyślnie)
-        - negotiable: true jeśli jest "do negocjacji"
-        
-        LOKALIZACJA:
-        - city: miasto
-        - region: województwo
-        - country: "Polska" (domyślnie)
-        - location: ogólny opis lokalizacji
-        
-        SZCZEGÓŁY KONIA:
-        - purpose: przeznaczenie (sportowy/rekreacyjny/roboczy/zaprzęgowy)
-        - disciplines: dyscypliny sportowe (skoki/ujeżdżenie/rajdy)
-        - trainingLevel: poziom wyszkolenia
-        - healthStatus: zdrowy/ranny/niezdatny do jazdy/nieznany
-        - hasTUV: czy ma badania (true/false)
-        
-        RODOWÓD:
-        - father: imię ojca jeśli podane
-        - mother: imię matki jeśli podane
-        - pedigree: informacje o rodowodzie
-        - registrationNumber: numer paszportu
-        
-        ŹRÓDŁO:
-        - sourceUrl: URL ogłoszenia
-        - sourceName: "OLX"
-        - sourceListingId: wyciągnij ID z URL-a
-        
-        MEDIA I OPISY:
-        - description: pełny opis konia
-        - imageUrl: główne zdjęcie (pierwsze)
-        - images: wszystkie URL-e zdjęć
-        
-        SEO:
-        - seoTitle: tytuł SEO (może być taki sam jak name)
-        - seoDescription: krótki opis SEO
-        
-        DODATKOWE:
-        - contactInfo: informacje kontaktowe jeśli dostępne
-        - features: dodatkowe cechy konia
-        - datePosted: data dodania ogłoszenia
         
         WAŻNE: Jeśli informacja nie jest dostępna, pozostaw pole puste lub użyj wartości domyślnych.
         `,
@@ -343,7 +284,7 @@ export const generateStructuredData = action({
       }
     } catch (error) {
       console.error('Error generating structured data:', error)
-      throw new Error(`Failed to generate structured data: ${error}`)
+      return { structuredData: null, success: false }
     }
   },
 })
