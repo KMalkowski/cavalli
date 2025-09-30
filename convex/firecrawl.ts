@@ -269,7 +269,7 @@ export const generateStructuredData = action({
 
     try {
       const { object } = await generateObject({
-        model: openai('gpt-4o'),
+        model: openai('gpt-5-mini'),
         schema: horseOfferSchema,
         prompt: `Przeanalizuj poniższą treść ogłoszenia o sprzedaży konia z OLX i wyciągnij z niej wszystkie istotne informacje zgodnie ze schematem bazy danych.
 
