@@ -53,13 +53,13 @@ export function ProductDescription({ horse }: { horse: Doc<'horses'> }) {
           html={horse.description}
         />
       ) : null}
-      <div className="mb-3 flex gap-2">
+      <div className="mb-3 grid grid-cols-[auto_1fr] gap-2">
         <HeartButton
           horseId={horse._id}
           variant="outline"
           className="shrink-0"
         />
-        <Button asChild className="min-w-0 flex-1">
+        <Button asChild className="min-w-0 overflow-hidden">
           <Link
             href="#details-section"
             className="flex items-center justify-center gap-1 sm:gap-2"
