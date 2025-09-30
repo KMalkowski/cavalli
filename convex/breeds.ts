@@ -93,7 +93,6 @@ export const HORSE_BREEDS = [
   'Luksemburska gorącokrwista',
   'Lusitano',
   'Łotewska',
-  'Łotewska',
   'Małopolska',
   'Maremmano',
   'Meckenburska',

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Badge } from '../ui/badge'
 import { getGenderBadgeClasses } from '@/lib/horse-utils'
 import { Doc } from '@/convex/_generated/dataModel'
+import { HeartButton } from '../ui/heart-button'
 
 export function HorseCard({ horse }: { horse: Doc<'horses'> }) {
   return (
@@ -67,9 +68,7 @@ export function HorseCard({ horse }: { horse: Doc<'horses'> }) {
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <Button variant="outline" size="icon" className="shrink-0">
-              <Heart className="h-4 w-4" />
-            </Button>
+            <HeartButton horseId={horse._id} />
             <Button asChild className="w-full md:w-auto">
               <Link href={`/horse/${horse._id}`}>Szczegóły</Link>
             </Button>

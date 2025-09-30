@@ -1,93 +1,81 @@
-import { Doc } from '@/convex/_generated/dataModel'
-import Link from 'next/link'
-import { Card } from '../ui/card'
-import { Button } from '../ui/button'
-import { Badge } from '../ui/badge'
-import { HeartButton } from '../ui/heart-button'
-import { getGenderBadgeClasses } from '@/lib/horse-utils'
+'use client'
+
+import { Preloaded, usePreloadedQuery, useQuery } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+import { HorseCard } from './horse-card'
+import {
+  parseAsArrayOf,
+  parseAsString,
+  parseAsInteger,
+  useQueryState,
+} from 'nuqs'
 
 export default function ProductListItems({
-  horses,
+  preloadedHorses,
 }: {
-  horses: Doc<'horses'>[]
+  preloadedHorses: Preloaded<typeof api.horses.list>
 }) {
+  const [breeds] = useQueryState(
+    'breeds',
+    parseAsArrayOf(parseAsString).withDefault([])
+  )
+  const [genders] = useQueryState(
+    'genders',
+    parseAsArrayOf(parseAsString).withDefault([])
+  )
+  const [purposes] = useQueryState(
+    'purposes',
+    parseAsArrayOf(parseAsString).withDefault([])
+  )
+  const [healthStatuses] = useQueryState(
+    'healthStatuses',
+    parseAsArrayOf(parseAsString).withDefault([])
+  )
+  const [trainingLevels] = useQueryState(
+    'trainingLevels',
+    parseAsArrayOf(parseAsString).withDefault([])
+  )
+  const [priceMin] = useQueryState('priceMin', parseAsInteger.withDefault(0))
+  const [priceMax] = useQueryState('priceMax', parseAsInteger.withDefault(0))
+  const [heightMin] = useQueryState('heightMin', parseAsInteger.withDefault(0))
+  const [heightMax] = useQueryState('heightMax', parseAsInteger.withDefault(0))
+  const [ageMin] = useQueryState('ageMin', parseAsInteger.withDefault(0))
+  const [ageMax] = useQueryState('ageMax', parseAsInteger.withDefault(0))
+
+  const preloadedHorsesList = usePreloadedQuery(preloadedHorses)
+
+  const horses = useQuery(api.horses.list, {
+    paginationOpts: {
+      numItems: 10,
+      cursor: null,
+    },
+    breeds: breeds.length > 0 ? breeds : undefined,
+    genders: genders.length > 0 ? genders : undefined,
+    purposes: purposes.length > 0 ? purposes : undefined,
+    healthStatuses: healthStatuses.length > 0 ? healthStatuses : undefined,
+    trainingLevels: trainingLevels.length > 0 ? trainingLevels : undefined,
+    minPrice: priceMin > 0 ? priceMin : undefined,
+    maxPrice: priceMax > 0 ? priceMax : undefined,
+    minHeight: heightMin > 0 ? heightMin : undefined,
+    maxHeight: heightMax > 0 ? heightMax : undefined,
+    minAge: ageMin > 0 ? ageMin : undefined,
+    maxAge: ageMax > 0 ? ageMax : undefined,
+  })
+
+  if (horses === undefined) {
+    return (
+      <>
+        {preloadedHorsesList.page.map((horse) => (
+          <HorseCard horse={horse} key={horse._id} />
+        ))}
+      </>
+    )
+  }
+
   return (
     <>
-      {horses.map((horse) => (
-        <Card
-          key={horse._id}
-          className="mb-4 transition-all duration-300 ease-out hover:ring-2 hover:ring-blue-500/20 hover:ring-offset-2 hover:brightness-105"
-        >
-          <div className="bg-background relative flex-1 gap-8 px-6 md:flex">
-            <Link
-              href={`/horse/${horse._id}`}
-              className="bg-muted group relative h-64 w-full shrink-0 overflow-hidden rounded-lg md:h-64 md:w-64"
-            >
-              <img
-                src={horse.imageUrl || ''}
-                alt={horse.name}
-                className="h-full w-full scale-[101%] object-cover transition-transform duration-300 ease-out group-hover:scale-105 md:h-64 md:w-64"
-                style={{ width: '100%', height: '100%' }}
-              />
-            </Link>
-            <div className="mt-4 flex min-w-0 flex-1 flex-col justify-between md:mt-0">
-              <div>
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-2">
-                    <Link href={`/horse/${horse._id}`}>
-                      <h3 className="hover:text-primary cursor-pointer text-lg font-medium transition-colors">
-                        {horse.name}
-                      </h3>
-                    </Link>
-                  </div>
-                </div>
-                <div className="text-muted-foreground my-2 text-sm">
-                  <p className="mb-2 line-clamp-3">{horse.description}</p>
-                  <div className="flex flex-wrap items-center gap-2 text-xs">
-                    {horse.gender && (
-                      <Badge
-                        className={`text-xs ${getGenderBadgeClasses(horse.gender)} mr-2`}
-                      >
-                        {horse.gender}
-                      </Badge>
-                    )}
-                    {horse.age && horse.age > 0 ? (
-                      <Badge variant="outline">{`${horse.age} lat`}</Badge>
-                    ) : null}
-                    {horse.breed &&
-                    horse.breed.trim() !== '' &&
-                    horse.breed.toLowerCase() !== 'pozostałe' ? (
-                      <Badge variant="outline">{horse.breed}</Badge>
-                    ) : null}
-                    {horse.color && horse.color.trim() !== '' ? (
-                      <Badge variant="outline">{horse.color}</Badge>
-                    ) : null}
-                    {horse.height && horse.height > 0 ? (
-                      <Badge variant="outline">{`${horse.height} cm`}</Badge>
-                    ) : null}
-                    {horse.disciplines && horse.disciplines.length > 0 ? (
-                      <Badge variant="outline">
-                        {horse.disciplines.join(', ')}
-                      </Badge>
-                    ) : null}
-                    {horse.purpose && horse.purpose.trim() !== '' ? (
-                      <Badge variant="outline">{horse.purpose}</Badge>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="mb-2 text-lg font-medium whitespace-nowrap md:mb-0">
-                  {horse.price} {horse.currency}
-                </div>
-              </div>
-              <div className="flex justify-end gap-2">
-                <HeartButton horseId={horse._id} />
-                <Button asChild className="w-full md:w-auto">
-                  <Link href={`/horse/${horse._id}`}>Szczegóły</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </Card>
+      {horses.page.map((horse) => (
+        <HorseCard horse={horse} key={horse._id} />
       ))}
     </>
   )
