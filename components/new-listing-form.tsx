@@ -27,40 +27,46 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
-// Zod schema for horse listing form validation
+// Schemat Zod do walidacji formularza ogłoszenia konia
 const horseListingSchema = z.object({
-  name: z.string().min(1, 'Horse name is required').max(100, 'Name too long'),
-  breed: z.string().min(1, 'Breed is required').max(50, 'Breed name too long'),
-  age: z.number().min(0, 'Age must be positive').max(50, 'Age seems too high'),
+  name: z
+    .string()
+    .min(1, 'Nazwa konia jest wymagana')
+    .max(100, 'Nazwa za długa'),
+  breed: z.string().min(1, 'Rasa jest wymagana').max(50, 'Nazwa rasy za długa'),
+  age: z
+    .number()
+    .min(0, 'Wiek musi być dodatni')
+    .max(50, 'Wiek wydaje się za wysoki'),
   height: z
     .number()
-    .min(10, 'Height must be at least 10hh')
-    .max(20, 'Height seems too high'),
-  price: z.number().min(0, 'Price must be positive'),
+    .min(10, 'Wysokość musi wynosić co najmniej 10hh')
+    .max(20, 'Wysokość wydaje się za wysoka'),
+  price: z.number().min(0, 'Cena musi być dodatnia'),
   currency: z
     .string()
-    .min(1, 'Currency is required')
-    .max(3, 'Invalid currency code'),
+    .min(1, 'Waluta jest wymagana')
+    .max(3, 'Nieprawidłowy kod waluty'),
   description: z
     .string()
-    .min(10, 'Description must be at least 10 characters')
-    .max(1000, 'Description too long'),
+    .min(10, 'Opis musi mieć co najmniej 10 znaków')
+    .max(1000, 'Opis za długi'),
   location: z
     .string()
-    .min(1, 'Location is required')
-    .max(100, 'Location too long'),
+    .min(1, 'Lokalizacja jest wymagana')
+    .max(100, 'Lokalizacja za długa'),
   imageUrl: z
     .string()
     .optional()
     .refine((val) => {
-      if (!val || val === '') return true // Allow empty/undefined
+      if (!val || val === '') return true // Pozwól na puste/niezdefiniowane
       try {
         new URL(val)
         return true
       } catch {
         return false
       }
-    }, 'Must be a valid URL'),
+    }, 'Musi być prawidłowym adresem URL'),
 })
 
 type HorseListingFormData = z.infer<typeof horseListingSchema>
@@ -81,7 +87,7 @@ export function NewListingForm({
       age: 0,
       height: 0,
       price: 0,
-      currency: 'USD',
+      currency: 'PLN',
       description: '',
       location: '',
       imageUrl: '',
@@ -103,14 +109,14 @@ export function NewListingForm({
       console.log('Submitting data:', submitData)
       await createHorse(submitData)
       console.log('Submission successful')
-      toast.success('Horse listing created successfully!')
+      toast.success('Ogłoszenie konia zostało utworzone pomyślnie!')
       form.reset()
     } catch (error) {
       console.error('Error creating horse listing:', error)
       toast.error(
         error instanceof Error
           ? error.message
-          : 'Failed to create horse listing. Please try again.'
+          : 'Nie udało się utworzyć ogłoszenia konia. Spróbuj ponownie.'
       )
     } finally {
       setIsSubmitting(false)
@@ -122,14 +128,14 @@ export function NewListingForm({
       <div className={cn('mx-auto w-full max-w-2xl', className)} {...props}>
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Authentication Required</CardTitle>
+            <CardTitle className="text-2xl">Wymagana autoryzacja</CardTitle>
             <CardDescription>
-              You need to be logged in to create a horse listing.
+              Musisz być zalogowany, aby utworzyć ogłoszenie konia.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground text-center">
-              Please log in to access this feature.
+              Zaloguj się, aby uzyskać dostęp do tej funkcji.
             </p>
           </CardContent>
         </Card>
@@ -141,9 +147,9 @@ export function NewListingForm({
     <div className={cn('mx-auto w-full max-w-2xl', className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Create Horse Listing</CardTitle>
+          <CardTitle className="text-2xl">Utwórz ogłoszenie konia</CardTitle>
           <CardDescription>
-            Fill out the form below to create a new horse listing
+            Wypełnij poniższy formularz, aby utworzyć nowe ogłoszenie konia
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -160,9 +166,9 @@ export function NewListingForm({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Horse Name *</FormLabel>
+                      <FormLabel>Nazwa konia *</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter horse name" {...field} />
+                        <Input placeholder="Wprowadź nazwę konia" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -174,10 +180,10 @@ export function NewListingForm({
                   name="breed"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Breed *</FormLabel>
+                      <FormLabel>Rasa *</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g., Thoroughbred, Quarter Horse"
+                          placeholder="np. Thoroughbred, Quarter Horse"
                           {...field}
                         />
                       </FormControl>
@@ -193,7 +199,7 @@ export function NewListingForm({
                   name="age"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Age (years) *</FormLabel>
+                      <FormLabel>Wiek (lata) *</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -215,7 +221,7 @@ export function NewListingForm({
                   name="height"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Height (hands) *</FormLabel>
+                      <FormLabel>Wysokość (łokcie) *</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -238,9 +244,9 @@ export function NewListingForm({
                   name="currency"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Currency *</FormLabel>
+                      <FormLabel>Waluta *</FormLabel>
                       <FormControl>
-                        <Input placeholder="USD" {...field} />
+                        <Input placeholder="PLN" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -253,11 +259,11 @@ export function NewListingForm({
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price *</FormLabel>
+                    <FormLabel>Cena *</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="Enter price"
+                        placeholder="Wprowadź cenę"
                         {...field}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value)
@@ -275,9 +281,12 @@ export function NewListingForm({
                 name="location"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Location *</FormLabel>
+                    <FormLabel>Lokalizacja *</FormLabel>
                     <FormControl>
-                      <Input placeholder="City, State/Country" {...field} />
+                      <Input
+                        placeholder="Miasto, Województwo/Kraj"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -289,10 +298,10 @@ export function NewListingForm({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description *</FormLabel>
+                    <FormLabel>Opis *</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Describe the horse, including temperament, training level, and any special features..."
+                        placeholder="Opisz konia, w tym temperament, poziom wyszkolenia i wszelkie szczególne cechy..."
                         className="min-h-[100px]"
                         {...field}
                       />
@@ -307,7 +316,7 @@ export function NewListingForm({
                 name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Image URL (optional)</FormLabel>
+                    <FormLabel>URL obrazu (opcjonalne)</FormLabel>
                     <FormControl>
                       <Input
                         type="url"
@@ -326,7 +335,9 @@ export function NewListingForm({
                 disabled={isSubmitting}
                 size="lg"
               >
-                {isSubmitting ? 'Creating Listing...' : 'Create Horse Listing'}
+                {isSubmitting
+                  ? 'Tworzenie ogłoszenia...'
+                  : 'Utwórz ogłoszenie konia'}
               </Button>
             </form>
           </Form>

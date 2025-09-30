@@ -2,6 +2,7 @@ import { Doc } from '@/convex/_generated/dataModel'
 import Prose from '../prose'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
+import { HeartButton } from '../ui/heart-button'
 import { ExternalLink, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import { getGenderBadgeClasses } from '@/lib/horse-utils'
@@ -52,12 +53,18 @@ export function ProductDescription({ horse }: { horse: Doc<'horses'> }) {
           html={horse.description}
         />
       ) : null}
-      <Button asChild className="mb-3 w-full">
-        <Link href="#details-section" className="flex items-center gap-2">
-          <ChevronDown className="h-4 w-4" />
-          Szczegóły ogłoszenia
-        </Link>
-      </Button>
+      <div className="mb-3 flex gap-2">
+        <HeartButton horseId={horse._id} variant="outline" />
+        <Button asChild className="flex-1">
+          <Link
+            href="#details-section"
+            className="flex items-center justify-center gap-2"
+          >
+            <ChevronDown className="h-4 w-4" />
+            Szczegóły ogłoszenia
+          </Link>
+        </Button>
+      </div>
       {horse.sourceUrl && (
         <Button asChild variant="outline" className="w-full">
           <Link

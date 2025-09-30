@@ -1,8 +1,8 @@
 import { NewListingForm } from '@/components/new-listing-form'
 
 export const metadata = {
-  title: 'Create Horse Listing',
-  description: 'Create a new horse listing for sale',
+  title: 'Utwórz ogłoszenie konia',
+  description: 'Utwórz nowe ogłoszenie konia na sprzedaż',
 }
 
 export default function NewListingPage() {

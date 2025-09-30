@@ -66,7 +66,7 @@ export default function ProductListItems({
     return (
       <>
         {preloadedHorsesList.page.map((horse) => (
-          <HorseCard horse={horse} />
+          <HorseCard horse={horse} key={horse._id} />
         ))}
       </>
     )
@@ -75,7 +75,7 @@ export default function ProductListItems({
   return (
     <>
       {horses.page.map((horse) => (
-        <HorseCard horse={horse} />
+        <HorseCard horse={horse} key={horse._id} />
       ))}
     </>
   )

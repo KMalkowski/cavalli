@@ -82,7 +82,7 @@ export function Gallery({
                 key={image.src}
                 onClick={() => handleThumbnailClick(index)}
                 className={cn(
-                  'relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-all hover:opacity-80',
+                  'relative h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-lg border-2 transition-all hover:opacity-80',
                   currentIndex === index
                     ? 'border-blue-500 ring-2 ring-blue-200'
                     : 'border-gray-200'

@@ -44,7 +44,9 @@ export function ForgotPasswordForm({
       },
       {
         onSuccess: () => {
-          toast.success('Password reset email sent! Check your inbox.')
+          toast.success(
+            'Email do resetowania hasła został wysłany! Sprawdź swoją skrzynkę.'
+          )
         },
         onError: (error) => {
           toast.error(error.error.message)
@@ -59,10 +61,9 @@ export function ForgotPasswordForm({
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Forgot your password?</CardTitle>
+          <CardTitle className="text-xl">Zapomniałeś hasła?</CardTitle>
           <CardDescription>
-            Enter your email address and we'll send you a link to reset your
-            password
+            Podaj swój adres email, a wyślemy Ci link do resetowania hasła
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -76,10 +77,10 @@ export function ForgotPasswordForm({
                   control={form.control}
                   name="email"
                   rules={{
-                    required: 'Email is required',
+                    required: 'Email jest wymagany',
                     pattern: {
                       value: /^\S+@\S+$/i,
-                      message: 'Please enter a valid email address',
+                      message: 'Proszę podać prawidłowy adres email',
                     },
                   }}
                   render={({ field }) => (
@@ -88,7 +89,7 @@ export function ForgotPasswordForm({
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="m@example.com"
+                          placeholder="jan@example.com"
                           {...field}
                         />
                       </FormControl>
@@ -101,7 +102,7 @@ export function ForgotPasswordForm({
                   className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Sending...' : 'Send Reset Email'}
+                  {isSubmitting ? 'Wysyłanie...' : 'Wyślij email resetujący'}
                 </Button>
               </form>
             </Form>

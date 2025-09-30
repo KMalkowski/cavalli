@@ -113,7 +113,6 @@ export const filters = {
       'Luksemburska gorącokrwista',
       'Lusitano',
       'Łotewska',
-      'Łotewska',
       'Małopolska',
       'Maremmano',
       'Meckenburska',

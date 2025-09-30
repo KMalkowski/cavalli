@@ -24,7 +24,7 @@ export const getUserFavorites = query({
         const owner = await authComponent.getAuthUser(ctx)
         return {
           ...horse,
-          owner: user ? { name: user.name, email: user.email } : null,
+          owner: owner ? { name: owner.name, email: owner.email } : null,
         }
       })
     )
