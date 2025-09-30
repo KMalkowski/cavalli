@@ -36,6 +36,11 @@ export default function FirecrawlTester() {
           offerUrl: firstOfferUrl,
         })
 
+        if (!structuredData.structuredData) {
+          console.log('No structured data generated')
+          return
+        }
+
         console.log('Structured data:', structuredData.structuredData)
 
         // Save structured data to database

@@ -284,6 +284,7 @@ export const generateStructuredData = action({
       }
     } catch (error) {
       console.error('Error generating structured data:', error)
+      return { structuredData: null, success: false }
     }
   },
 })
