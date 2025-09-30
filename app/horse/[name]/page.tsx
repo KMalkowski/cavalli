@@ -127,7 +127,7 @@ export default async function HorsePage(props: {
           __html: JSON.stringify(productJsonLd),
         }}
       />
-      <div className="mx-auto max-w-(--breakpoint-xl)">
+      <div className="mx-auto max-w-(--breakpoint-xl) p-4 md:p-8">
         <div className="flex flex-col rounded-lg border border-neutral-200 bg-white p-4 md:p-8 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
           <div className="h-full w-full basis-full lg:basis-4/6">
             <Suspense
@@ -300,10 +300,6 @@ export default async function HorsePage(props: {
                 <TableRow>
                   <TableCell className="font-medium">Miasto</TableCell>
                   <TableCell>{formatValue(horse.city)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Współrzędne</TableCell>
-                  <TableCell>{formatValue(horse.coordinates)}</TableCell>
                 </TableRow>
 
                 {/* Źródło i techniczne */}

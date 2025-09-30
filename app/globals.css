@@ -224,6 +224,49 @@ button {
     hyphenate-limit-lines: 2;
     hyphenate-limit-last: always;
   }
+
+  /* Custom scrollbar styles - horse theme */
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 0px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--chart-1);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Firefox scrollbar */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+  }
+
+  /* Custom scrollbar for specific elements */
+  .carousel-content::-webkit-scrollbar {
+    height: 2px;
+  }
+
+  .carousel-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .carousel-content::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 0px;
+  }
 }
 
 ::-webkit-scrollbar {
