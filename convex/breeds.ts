@@ -126,6 +126,7 @@ export const HORSE_BREEDS = [
   'Szwajcarska',
   'Szwedzka',
   'Śląska',
+  'SP',
   'Tennessee Walking Horse',
   'Tierska',
   'Tinker',
