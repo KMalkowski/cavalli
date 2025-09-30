@@ -53,7 +53,7 @@ export function Gallery({
         <CarouselContent className="aspect-square">
           {images.map((image) => (
             <CarouselItem key={image.src}>
-              <div className="relative aspect-square h-full w-full content-center justify-items-center overflow-hidden rounded-lg md:max-h-none">
+              <div className="relative grid aspect-square h-full w-full content-center justify-items-center overflow-hidden rounded-lg md:max-h-none">
                 <img
                   src={image.src}
                   alt={image.altText}
