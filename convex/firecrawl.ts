@@ -5,26 +5,46 @@ import { v } from 'convex/values'
 import { generateObject } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { z } from 'zod'
+import { HORSE_BREEDS } from './breeds'
 
-// Zod schema for horse offer data - matching the database schema
+// Utility function to create Zod enum from array
+const createEnumFromArray = <T extends readonly [string, ...string[]]>(
+  arr: T
+) => {
+  return z.enum(arr)
+}
+
 const horseOfferSchema = z.object({
-  // Basic horse information
   name: z.string().describe('Nazwa/tytuł konia'),
-  breed: z.string().optional().describe('Rasa konia'),
+  breed: createEnumFromArray(HORSE_BREEDS).optional().describe('Rasa konia'),
   age: z.number().optional().describe('Wiek konia w latach'),
   height: z.number().optional().describe('Wysokość konia w cm'),
   gender: z
-    .string()
+    .union([z.literal('ogier'), z.literal('klacz'), z.literal('wałach')])
     .optional()
-    .describe('Płeć konia (Ogier/Klacz/Wałach/Źrebak/Źrebica)'),
-  color: z.string().optional().describe('Maść konia'),
+    .describe('Płeć konia'),
+  color: z
+    .enum([
+      'Gniada',
+      'Kasztanowata',
+      'Siwa',
+      'Ciemnogniada',
+      'Kara',
+      'Skarogniada',
+      'Srokata',
+      'Bułana',
+      'Myszata',
+      'Tarantowata',
+      'Izabelowata',
+      'Dereszowata',
+    ])
+    .optional()
+    .describe('Maść konia'),
 
-  // Pricing and availability
   price: z.number().describe('Cena w złotych'),
   currency: z.string().default('PLN').describe('Waluta'),
   isAvailable: z.boolean().default(true).describe('Czy koń jest dostępny'),
 
-  // Location information
   location: z.string().optional().describe('Ogólna lokalizacja'),
   country: z.string().optional().describe('Kraj'),
   region: z.string().optional().describe('Województwo'),
@@ -43,9 +63,21 @@ const horseOfferSchema = z.object({
     .optional()
     .describe('Przeznaczenie konia (sportowy/rekreacyjny/roboczy)'),
   disciplines: z.array(z.string()).optional().describe('Dyscypliny sportowe'),
-  trainingLevel: z.string().optional().describe('Poziom wyszkolenia'),
+  trainingLevel: z
+    .enum([
+      'Surowy',
+      'Lonżowany',
+      'Zajeżdżony',
+      'Klasa L',
+      'Klasa P',
+      'Klasa N',
+      'Klasa C',
+      'Klasa CC',
+    ])
+    .optional()
+    .describe('Poziom wyszkolenia'),
   healthStatus: z
-    .enum(['zdrowy', 'chory', 'kontuzjowany', 'niejezdny', 'nieznany'])
+    .enum(['Zdrowy', 'Chory', 'Kontuzjowany', 'Niezdatny do jazdy', 'Nieznany'])
     .optional()
     .describe('Stan zdrowia'),
 

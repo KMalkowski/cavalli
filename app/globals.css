@@ -268,3 +268,15 @@ button {
     border-radius: 0px;
   }
 }
+
+::-webkit-scrollbar {
+  @apply h-2.5 w-2.5;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full border-[1px] border-solid border-transparent bg-clip-padding;
+}

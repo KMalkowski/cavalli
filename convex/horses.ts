@@ -84,10 +84,17 @@ export const list = query({
   args: {
     paginationOpts: paginationOptsValidator,
     breed: v.optional(v.string()),
+    breeds: v.optional(v.array(v.string())),
+    genders: v.optional(v.array(v.string())),
+    purposes: v.optional(v.array(v.string())),
+    healthStatuses: v.optional(v.array(v.string())),
+    trainingLevels: v.optional(v.array(v.string())),
     minPrice: v.optional(v.number()),
     maxPrice: v.optional(v.number()),
     minHeight: v.optional(v.number()),
     maxHeight: v.optional(v.number()),
+    minAge: v.optional(v.number()),
+    maxAge: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     let query = ctx.db
@@ -129,10 +136,54 @@ export const list = query({
       )
     }
 
-    // Sort by creation time (newest first)
+    if (args.breeds && args.breeds.length > 0) {
+      filteredHorses = filteredHorses.filter(
+        (horse) => horse.breed && args.breeds!.includes(horse.breed)
+      )
+    }
+
+    if (args.genders && args.genders.length > 0) {
+      filteredHorses = filteredHorses.filter(
+        (horse) => horse.gender && args.genders!.includes(horse.gender)
+      )
+    }
+
+    if (args.purposes && args.purposes.length > 0) {
+      filteredHorses = filteredHorses.filter(
+        (horse) => horse.purpose && args.purposes!.includes(horse.purpose)
+      )
+    }
+
+    if (args.healthStatuses && args.healthStatuses.length > 0) {
+      filteredHorses = filteredHorses.filter(
+        (horse) =>
+          horse.healthStatus &&
+          args.healthStatuses!.includes(horse.healthStatus)
+      )
+    }
+
+    if (args.trainingLevels && args.trainingLevels.length > 0) {
+      filteredHorses = filteredHorses.filter(
+        (horse) =>
+          horse.trainingLevel &&
+          args.trainingLevels!.includes(horse.trainingLevel)
+      )
+    }
+
+    if (args.minAge !== undefined) {
+      filteredHorses = filteredHorses.filter(
+        (horse) => horse.age && horse.age >= args.minAge!
+      )
+    }
+
+    if (args.maxAge !== undefined) {
+      filteredHorses = filteredHorses.filter(
+        (horse) => horse.age && horse.age <= args.maxAge!
+      )
+    }
+
     filteredHorses.sort((a, b) => b._creationTime - a._creationTime)
 
-    // Manual pagination
     const { numItems, cursor } = args.paginationOpts
     const startIndex = cursor ? parseInt(cursor) : 0
     const endIndex = startIndex + numItems
