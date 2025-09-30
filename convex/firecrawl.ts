@@ -271,10 +271,19 @@ export const generateStructuredData = action({
       const { object } = await generateObject({
         model: openai('gpt-5-mini'),
         schema: horseOfferSchema,
-        prompt: `Przeanalizuj poniższą treść ogłoszenia o sprzedaży konia z OLX i wyciągnij z niej wszystkie istotne informacje zgodnie ze schematem bazy danych.
-        
+        system: `
+        Jesteś ekspertem w dziedzinie sprzedaży koni.
+        Masz za zadanie wyciągnąć wszystkie istotne informacje zgodnie ze schematem.
         WAŻNE: Jeśli informacja nie jest dostępna, pozostaw pole puste lub użyj wartości domyślnych.
         `,
+        prompt: `
+        Treść ogłoszenia: ${args.markdownContent}
+        `,
+        providerOptions: {
+          openai: {
+            structuredOutputs: true,
+          },
+        },
       })
 
       console.log('Structured data generated successfully')
