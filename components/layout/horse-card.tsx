@@ -74,8 +74,11 @@ export function HorseCard({ horse }: { horse: Doc<'horses'> }) {
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <HeartButton horseId={horse._id} />
-            <Button asChild className="w-full md:w-auto">
+            <HeartButton horseId={horse._id} className="shrink-0" />
+            <Button
+              asChild
+              className="max-w-[calc(100% - 44px)] min-w-0 flex-1 md:max-w-none"
+            >
               <Link href={`/horse/${horse._id}`}>Szczegóły</Link>
             </Button>
           </div>
