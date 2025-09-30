@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 
-const formatValue = (value: any): string => {
+const formatValue = (value: unknown): string => {
   if (value === null || value === undefined || value === '') {
     return 'Nie podano'
   }
@@ -26,9 +26,15 @@ const formatValue = (value: any): string => {
     return value.length > 0 ? value.join(', ') : 'Nie podano'
   }
 
-  if (typeof value === 'object') {
-    if (value.lat && value.lng) {
-      return `${value.lat.toFixed(4)}, ${value.lng.toFixed(4)}`
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'lat' in value &&
+    'lng' in value
+  ) {
+    const v = value as { lat?: number; lng?: number }
+    if (typeof v.lat === 'number' && typeof v.lng === 'number') {
+      return `${v.lat.toFixed(4)}, ${v.lng.toFixed(4)}`
     }
     return JSON.stringify(value)
   }
