@@ -54,7 +54,7 @@ export function SidebarRangeFilter({
       return
     }
     const parsed = Number(raw)
-    if (!Number.isNaN(parsed)) setMinValue(parsed as any)
+    if (!Number.isNaN(parsed)) setMinValue(parsed)
   }
 
   const onChangeMax = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +64,7 @@ export function SidebarRangeFilter({
       return
     }
     const parsed = Number(raw)
-    if (!Number.isNaN(parsed)) setMaxValue(parsed as any)
+    if (!Number.isNaN(parsed)) setMaxValue(parsed)
   }
 
   const anyActive = minValue !== 0 || maxValue !== 0

@@ -7,7 +7,6 @@ import { openai } from '@ai-sdk/openai'
 import { z } from 'zod'
 import { HORSE_BREEDS } from './breeds'
 
-// Utility function to create Zod enum from array
 const createEnumFromArray = <T extends readonly [string, ...string[]]>(
   arr: T
 ) => {
@@ -77,7 +76,7 @@ const horseOfferSchema = z.object({
     .optional()
     .describe('Poziom wyszkolenia'),
   healthStatus: z
-    .enum(['Zdrowy', 'Chory', 'Kontuzjowany', 'Niezdatny do jazdy', 'Nieznany'])
+    .enum(['zdrowy', 'chory', 'kontuzjowany', 'niejezdny', 'nieznany'])
     .optional()
     .describe('Stan zdrowia'),
 
@@ -201,7 +200,6 @@ export const scrapeOfferDetails = action({
   args: {
     offerUrl: v.string(),
   },
-  returns: v.any(),
   handler: async (ctx, args) => {
     console.log('Starting scrape of individual offer:', args.offerUrl)
     const apiKey = process.env.FIRECRAWL_API_KEY
@@ -261,7 +259,6 @@ export const generateStructuredData = action({
     markdownContent: v.string(),
     offerUrl: v.string(),
   },
-  returns: v.any(),
   handler: async (ctx, args) => {
     console.log('Generating structured data for offer:', args.offerUrl)
 
