@@ -16,6 +16,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { FavoritesButton } from '@/components/layout/navbar/favorites-button'
+import AuthControl from '@/components/layout/navbar/auth-control'
+import Link from 'next/link'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 const formatValue = (value: unknown): string => {
   if (value === null || value === undefined || value === '') {
@@ -133,6 +138,22 @@ export default async function HorsePage(props: {
           __html: JSON.stringify(productJsonLd),
         }}
       />
+      <header className="bg-background sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <Link href="/" className="hover:text-primary text-sm font-medium">
+          ← Powrót do listy
+        </Link>
+
+        <div className="ml-auto flex items-center gap-2">
+          <FavoritesButton />
+          <Link href="/new-listing-form">
+            <Button>
+              <Plus />
+            </Button>
+          </Link>
+          <AuthControl />
+        </div>
+      </header>
+
       <div className="mx-auto max-w-(--breakpoint-xl) p-4 md:p-8">
         <div className="flex flex-col rounded-lg border border-neutral-200 bg-white p-4 md:p-8 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
           <div className="h-full w-full basis-full lg:basis-4/6">

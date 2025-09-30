@@ -5,13 +5,13 @@ import { Heart } from 'lucide-react'
 import { useFavorites } from '@/hooks/use-favorites'
 import { Id } from '@/convex/_generated/dataModel'
 import { cn } from '@/lib/utils'
-import { Authenticated, Unauthenticated } from 'convex/react'
+import { useQuery } from 'convex/react'
+import { api } from '@/convex/_generated/api'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from '@/components/ui/dialog'
 import { Auth } from '@/components/auth/auth'
 import { useState } from 'react'
@@ -24,97 +24,71 @@ interface HeartButtonProps {
   showCount?: boolean
 }
 
-function AuthenticatedHeartButton({
+export function HeartButton({
   horseId,
   variant = 'outline',
   size = 'icon',
   className,
   showCount = false,
 }: HeartButtonProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const currentUser = useQuery(api.auth.getCurrentUser)
   const { isFavorite, toggleFavorite, isPending } = useFavorites()
 
   const isHorseFavorite = isFavorite(horseId)
   const isHorsePending = isPending(horseId)
+  const isAuthenticated = !!currentUser
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+
+    if (!isAuthenticated) {
+      setIsDialogOpen(true)
+      return
+    }
+
     toggleFavorite(horseId)
   }
 
   return (
-    <Button
-      variant={variant}
-      size={size}
-      onClick={handleClick}
-      disabled={isHorsePending}
-      className={cn(
-        'cursor-pointer transition-all duration-200',
-        isHorseFavorite && 'border-red-500 text-red-500 hover:bg-red-50',
-        isHorsePending && 'cursor-not-allowed opacity-50',
-        className
-      )}
-    >
-      <Heart
-        className={cn(
-          'h-4 w-4 transition-all duration-200',
-          isHorseFavorite && 'fill-current'
-        )}
-      />
-      {showCount && isHorseFavorite && (
-        <span className="ml-1 text-xs">
-          {/* This could show a count if needed */}
-        </span>
-      )}
-    </Button>
-  )
-}
-
-function UnauthenticatedHeartButton({
-  variant = 'outline',
-  size = 'icon',
-  className,
-}: Omit<HeartButtonProps, 'horseId' | 'showCount'>) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant={variant}
-          size={size}
-          className={cn(
-            'cursor-pointer transition-all duration-200',
-            className
-          )}
-        >
-          <Heart className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent showCloseButton={false}>
-        <DialogTitle className="sr-only">Zaloguj się</DialogTitle>
-        <DialogDescription className="sr-only">
-          Zaloguj się, aby dodać konia do ulubionych
-        </DialogDescription>
-        <Auth />
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-export function HeartButton(props: HeartButtonProps) {
-  return (
     <>
-      <Authenticated>
-        <AuthenticatedHeartButton {...props} />
-      </Authenticated>
-      <Unauthenticated>
-        <UnauthenticatedHeartButton
-          variant={props.variant}
-          size={props.size}
-          className={props.className}
+      <Button
+        variant={variant}
+        size={size}
+        onClick={handleClick}
+        disabled={isAuthenticated && isHorsePending}
+        className={cn(
+          'transition-all duration-200',
+          isAuthenticated &&
+            isHorseFavorite &&
+            'border-red-500 text-red-500 hover:bg-red-50',
+          isAuthenticated && isHorsePending && 'cursor-not-allowed opacity-50',
+          className
+        )}
+      >
+        <Heart
+          className={cn(
+            'h-4 w-4 transition-all duration-200',
+            isAuthenticated && isHorseFavorite && 'fill-current'
+          )}
         />
-      </Unauthenticated>
+        {showCount && isAuthenticated && isHorseFavorite && (
+          <span className="ml-1 text-xs">
+            {/* This could show a count if needed */}
+          </span>
+        )}
+      </Button>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent showCloseButton={false}>
+          <DialogTitle className="sr-only">Zaloguj się</DialogTitle>
+          <DialogDescription className="sr-only">
+            Zaloguj się, aby dodać konia do ulubionych
+          </DialogDescription>
+          <Auth />
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

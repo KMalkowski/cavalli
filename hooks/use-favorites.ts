@@ -9,8 +9,11 @@ import { useState, useCallback } from 'react'
  * Hook for managing favorites with optimistic updates
  */
 export function useFavorites() {
-  const favorites = useQuery(api.favorites.getUserFavorites, {}) || []
+  const favorites = useQuery(api.favorites.getUserFavorites, {})
   const toggleFavorite = useMutation(api.favorites.toggle)
+
+  // Handle case when user is not authenticated
+  const safeFavorites = favorites || []
 
   // Optimistic state for immediate UI updates
   const [optimisticFavorites, setOptimisticFavorites] = useState<
@@ -22,7 +25,7 @@ export function useFavorites() {
 
   // Create a set of favorite horse IDs for fast lookup
   const favoriteIds = new Set([
-    ...(favorites
+    ...(safeFavorites
       ?.filter((horse) => horse !== null)
       .map((horse) => horse._id) || []),
     ...optimisticFavorites,
@@ -86,7 +89,7 @@ export function useFavorites() {
         })
       }
     },
-    [favorites, toggleFavorite, favoriteIds]
+    [safeFavorites, toggleFavorite, favoriteIds]
   )
 
   const isFavorite = useCallback(
@@ -104,7 +107,7 @@ export function useFavorites() {
   )
 
   return {
-    favorites,
+    favorites: safeFavorites,
     isFavorite,
     toggleFavorite: toggleFavoriteOptimistic,
     isPending,
