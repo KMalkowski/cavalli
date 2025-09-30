@@ -54,7 +54,7 @@ export function ProductDescription({ horse }: { horse: Doc<'horses'> }) {
         />
       ) : null}
       <div className="mb-3 flex gap-2">
-        <HeartButton horseId={horse._id} variant="outline" className="flex-1" />
+        <HeartButton horseId={horse._id} variant="outline" />
         <Button asChild className="flex-1">
           <Link
             href="#details-section"
