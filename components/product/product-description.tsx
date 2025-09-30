@@ -61,7 +61,7 @@ export function ProductDescription({ horse }: { horse: Doc<'horses'> }) {
         />
         <Button
           asChild
-          className="max-w-[calc(100% - 44px)] min-w-0 flex-1 md:max-w-none"
+          className="max-w-[calc(100%-44px)] min-w-0 flex-1 md:max-w-none"
         >
           <Link
             href="#details-section"
