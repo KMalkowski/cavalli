@@ -3,7 +3,7 @@
 import { Suspense } from 'react'
 import { useQuery, Authenticated, Unauthenticated } from 'convex/react'
 import { api } from '@/convex/_generated/api'
-import ProductListItems from '@/components/layout/product-list-items'
+// import ProductListItems from '@/components/layout/product-list-items'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -34,7 +34,7 @@ function FavoritesContent() {
       <h1 className="mb-8 text-3xl font-bold">
         Ulubione konie ({favorites.length})
       </h1>
-      <ProductListItems horses={favorites.filter((horse) => horse !== null)} />
+      {/* <ProductListItems preloadedHorses={favorites.filter((horse) => horse !== null)} /> */}
     </div>
   )
 }

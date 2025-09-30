@@ -46,7 +46,7 @@ export default function FirecrawlTester() {
 
         console.log('Horse saved to database with ID:', horseId)
       }
-    } catch (e: any) {
+    } catch (e) {
       console.error('Scrape error:', e)
     }
   }

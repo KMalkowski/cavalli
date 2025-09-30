@@ -1,15 +1,10 @@
-import clsx from 'clsx'
 import Image from 'next/image'
 import Label from '@/components/label'
 import { Card } from '../ui/card'
 
 export function GridTileImage({
-  isInteractive = true,
-  active,
   label,
-  ...props
 }: {
-  isInteractive?: boolean
   active?: boolean
   label?: {
     title: string

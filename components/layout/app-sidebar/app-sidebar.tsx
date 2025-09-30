@@ -195,13 +195,7 @@ export const filters = {
   },
   healthStatuses: {
     name: 'Stan zdrowia',
-    items: [
-      'Zdrowy',
-      'Chory',
-      'Kontuzjowany',
-      'Niezdatny do jazdy',
-      'Nieznany',
-    ],
+    items: ['zdrowy', 'chory', 'kontuzjowany', 'niejezdny', 'nieznany'],
   },
   trainingLevels: {
     name: 'Edukacja',

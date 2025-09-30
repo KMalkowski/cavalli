@@ -1,6 +1,5 @@
 import { api } from '@/convex/_generated/api'
-import { defaultSort, sorting } from '@/lib/constants'
-import { fetchQuery, preloadQuery } from 'convex/nextjs'
+import { preloadQuery } from 'convex/nextjs'
 import ProductListItems from '@/components/layout/product-list-items'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { SidebarInset } from '@/components/ui/sidebar'
