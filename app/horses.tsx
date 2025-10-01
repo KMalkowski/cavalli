@@ -37,7 +37,7 @@ export default function Horses() {
             background: '#fafafa',
           }}
         >
-          <img src={horse.imageUrl || ''} alt={horse.name} />
+          <img src={horse.imageUrl || undefined} alt={horse.name} />
           <h3 style={{ margin: '0 0 0.5rem 0' }}>{horse.name}</h3>
           <div>Breed: {horse.breed}</div>
           <div>

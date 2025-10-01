@@ -1,83 +1,87 @@
-import { query, mutation } from './_generated/server'
+import {
+  query,
+  mutation,
+  internalQuery,
+  internalMutation,
+} from './_generated/server'
 import { v } from 'convex/values'
 import { paginationOptsValidator } from 'convex/server'
 import { authComponent } from './auth'
+import { Doc } from './_generated/dataModel'
 
 // Validator for horse data from LLM scraping
 const horseDataValidator = v.object({
   // Basic horse information
+  type: v.union(v.literal('horse'), v.literal('something else')),
   name: v.string(),
-  breed: v.optional(v.string()),
-  age: v.optional(v.number()),
-  height: v.optional(v.number()),
-  gender: v.optional(v.string()),
-  color: v.optional(v.string()),
+  breed: v.optional(v.union(v.string(), v.null())),
+  age: v.optional(v.union(v.number(), v.null())),
+  height: v.optional(v.union(v.number(), v.null())),
+  gender: v.optional(v.union(v.string(), v.null())),
+  color: v.optional(v.union(v.string(), v.null())),
 
   // Pricing and availability
   price: v.number(),
-  currency: v.optional(v.string()),
-  isAvailable: v.optional(v.boolean()),
+  currency: v.optional(v.union(v.string(), v.null())),
+  isAvailable: v.optional(v.union(v.boolean(), v.null())),
 
   // Location information
-  location: v.optional(v.string()),
-  country: v.optional(v.string()),
-  region: v.optional(v.string()),
-  city: v.optional(v.string()),
+  location: v.optional(v.union(v.string(), v.null())),
+  country: v.optional(v.union(v.string(), v.null())),
+  region: v.optional(v.union(v.string(), v.null())),
+  city: v.optional(v.union(v.string(), v.null())),
   coordinates: v.optional(
-    v.object({
-      lat: v.number(),
-      lng: v.number(),
-    })
-  ),
-
-  // Horse details
-  purpose: v.optional(v.string()),
-  disciplines: v.optional(v.array(v.string())),
-  trainingLevel: v.optional(v.string()),
-  healthStatus: v.optional(
     v.union(
-      v.literal('zdrowy'),
-      v.literal('chory'),
-      v.literal('kontuzjowany'),
-      v.literal('niejezdny'),
-      v.literal('nieznany')
+      v.object({
+        lat: v.number(),
+        lng: v.number(),
+      }),
+      v.null()
     )
   ),
 
+  // Horse details
+  purpose: v.optional(v.union(v.string(), v.null())),
+  disciplines: v.optional(v.union(v.array(v.string()), v.null())),
+  trainingLevel: v.optional(v.union(v.string(), v.null())),
+  healthStatus: v.optional(v.union(v.string(), v.null())),
+
   // Pedigree information
-  father: v.optional(v.string()),
-  mother: v.optional(v.string()),
-  pedigree: v.optional(v.string()),
-  registrationNumber: v.optional(v.string()),
+  father: v.optional(v.union(v.string(), v.null())),
+  mother: v.optional(v.union(v.string(), v.null())),
+  pedigree: v.optional(v.union(v.string(), v.null())),
+  registrationNumber: v.optional(v.union(v.string(), v.null())),
 
   // Source and listing information
   sourceUrl: v.string(),
-  sourceName: v.optional(v.string()),
-  sourceListingId: v.optional(v.string()),
+  sourceName: v.optional(v.union(v.string(), v.null())),
+  sourceListingId: v.optional(v.union(v.string(), v.null())),
 
   // Media and descriptions
   description: v.string(),
-  imageUrl: v.optional(v.string()),
+  imageUrl: v.optional(v.union(v.string(), v.null())),
 
   // Technical fields
-  hasTUV: v.optional(v.boolean()),
+  hasTUV: v.optional(v.union(v.boolean(), v.null())),
 
   // SEO fields
-  seoTitle: v.optional(v.string()),
-  seoDescription: v.optional(v.string()),
+  seoTitle: v.optional(v.union(v.string(), v.null())),
+  seoDescription: v.optional(v.union(v.string(), v.null())),
 
   // Additional extracted data
-  negotiable: v.optional(v.boolean()),
-  datePosted: v.optional(v.string()),
+  datePosted: v.optional(v.union(v.string(), v.null())),
   contactInfo: v.optional(
-    v.object({
-      phone: v.optional(v.string()),
-      email: v.optional(v.string()),
-      name: v.optional(v.string()),
-    })
+    v.union(
+      v.object({
+        phone: v.optional(v.union(v.string(), v.null())),
+        email: v.optional(v.union(v.string(), v.null())),
+        name: v.optional(v.union(v.string(), v.null())),
+      }),
+      v.null()
+    )
   ),
-  features: v.optional(v.array(v.string())),
-  images: v.optional(v.array(v.string())),
+  features: v.optional(v.union(v.array(v.string()), v.null())),
+  images: v.optional(v.union(v.array(v.string()), v.null())),
 })
 
 export const list = query({
@@ -97,9 +101,7 @@ export const list = query({
     maxAge: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db
-      .query('horses')
-      .withIndex('by_available', (q) => q.eq('isAvailable', true))
+    let query = ctx.db.query('horses')
 
     // Apply filters
     const horses = await query.collect()
@@ -207,6 +209,16 @@ export const getById = query({
   },
 })
 
+export const getBySourceUrl = internalQuery({
+  args: { sourceUrl: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query('horses')
+      .withIndex('by_sourceUrl', (q) => q.eq('sourceUrl', args.sourceUrl))
+      .first()
+  },
+})
+
 export const getImages = query({
   args: { horseId: v.id('horses') },
   returns: v.array(
@@ -306,14 +318,11 @@ export const getUserListings = query({
 
     if (!userId) return []
 
-    return await ctx.db
-      .query('horses')
-      .withIndex('by_owner', (q) => q.eq('ownerEmail', userId))
-      .collect()
+    return await ctx.db.query('horses').collect()
   },
 })
 
-export const saveFromScraping = mutation({
+export const saveFromScraping = internalMutation({
   args: {
     horseData: horseDataValidator, // Structured data from LLM with proper validation
   },
@@ -329,39 +338,56 @@ export const saveFromScraping = mutation({
     // Extract image URL from images array or use single imageUrl
     const imageUrl = args.horseData.images?.[0] || args.horseData.imageUrl
 
-    // Prepare horse data for database
-    const horseRecord = {
+    // Prepare horse data for database, filtering out null values
+    const horseRecord: Omit<Doc<'horses'>, '_id' | '_creationTime'> = {
       name: args.horseData.name,
-      breed: args.horseData.breed,
-      age: args.horseData.age,
-      height: args.horseData.height,
-      gender: args.horseData.gender,
-      color: args.horseData.color,
       price: args.horseData.price,
-      currency: args.horseData.currency || 'PLN',
+      currency: args.horseData.currency ?? 'PLN',
       isAvailable: args.horseData.isAvailable ?? true,
-      location: args.horseData.location,
-      country: args.horseData.country || 'Polska',
-      region: args.horseData.region,
-      city: args.horseData.city,
-      coordinates: args.horseData.coordinates,
-      purpose: args.horseData.purpose,
-      disciplines: args.horseData.disciplines,
-      trainingLevel: args.horseData.trainingLevel,
-      healthStatus: args.horseData.healthStatus,
-      father: args.horseData.father,
-      mother: args.horseData.mother,
-      pedigree: args.horseData.pedigree,
-      registrationNumber: args.horseData.registrationNumber,
+      country: args.horseData.country ?? 'Polska',
       sourceUrl: args.horseData.sourceUrl,
-      sourceName: args.horseData.sourceName || 'OLX',
-      sourceListingId: sourceListingId,
+      sourceName: args.horseData.sourceName ?? 'OLX',
       description: args.horseData.description,
-      imageUrl: imageUrl,
       hasTUV: args.horseData.hasTUV ?? false,
-      seoTitle: args.horseData.seoTitle,
-      seoDescription: args.horseData.seoDescription,
     }
+
+    // Add optional fields only if they're not null
+    if (args.horseData.breed !== null) horseRecord.breed = args.horseData.breed
+    if (args.horseData.age !== null) horseRecord.age = args.horseData.age
+    if (args.horseData.height !== null)
+      horseRecord.height = args.horseData.height
+    if (args.horseData.gender !== null)
+      horseRecord.gender = args.horseData.gender
+    if (args.horseData.color !== null) horseRecord.color = args.horseData.color
+    if (args.horseData.location !== null)
+      horseRecord.location = args.horseData.location
+    if (args.horseData.region !== null)
+      horseRecord.region = args.horseData.region
+    if (args.horseData.city !== null) horseRecord.city = args.horseData.city
+    if (args.horseData.coordinates !== null)
+      horseRecord.coordinates = args.horseData.coordinates
+    if (args.horseData.purpose !== null)
+      horseRecord.purpose = args.horseData.purpose
+    if (args.horseData.disciplines !== null)
+      horseRecord.disciplines = args.horseData.disciplines
+    if (args.horseData.trainingLevel !== null)
+      horseRecord.trainingLevel = args.horseData.trainingLevel
+    if (args.horseData.healthStatus !== null)
+      horseRecord.healthStatus = args.horseData.healthStatus
+    if (args.horseData.father !== null)
+      horseRecord.father = args.horseData.father
+    if (args.horseData.mother !== null)
+      horseRecord.mother = args.horseData.mother
+    if (args.horseData.pedigree !== null)
+      horseRecord.pedigree = args.horseData.pedigree
+    if (args.horseData.registrationNumber !== null)
+      horseRecord.registrationNumber = args.horseData.registrationNumber
+    if (sourceListingId !== null) horseRecord.sourceListingId = sourceListingId
+    if (imageUrl !== null) horseRecord.imageUrl = imageUrl
+    if (args.horseData.seoTitle !== null)
+      horseRecord.seoTitle = args.horseData.seoTitle
+    if (args.horseData.seoDescription !== null)
+      horseRecord.seoDescription = args.horseData.seoDescription
 
     try {
       const horseId = await ctx.db.insert('horses', horseRecord)

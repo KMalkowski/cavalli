@@ -1,12 +1,16 @@
 'use node'
 
-import { action, mutation } from './_generated/server'
+import { internalAction } from './_generated/server'
 import { v } from 'convex/values'
 import { generateObject } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { z } from 'zod'
+import Firecrawl from '@mendable/firecrawl-js'
+import { internal } from './_generated/api'
+import { Doc } from './_generated/dataModel'
 
 const horseOfferSchema = z.object({
+  type: z.union([z.literal('horse'), z.literal('something else')]),
   name: z.string().describe('Nazwa/tytuł konia'),
   breed: z
     .union([
@@ -163,13 +167,13 @@ const horseOfferSchema = z.object({
       z.literal('Zweibrücker'),
       z.literal('Rasa nieznana'),
     ])
-    .optional()
+    .nullish()
     .describe('Rasa konia'),
-  age: z.number().optional().describe('Wiek konia w latach'),
-  height: z.number().optional().describe('Wysokość konia w cm'),
+  age: z.number().nullish().describe('Wiek konia w latach'),
+  height: z.number().nullish().describe('Wysokość konia w cm'),
   gender: z
     .union([z.literal('ogier'), z.literal('klacz'), z.literal('wałach')])
-    .optional()
+    .nullish()
     .describe('Płeć konia'),
   color: z
     .union([
@@ -186,31 +190,31 @@ const horseOfferSchema = z.object({
       z.literal('Izabelowata'),
       z.literal('Dereszowata'),
     ])
-    .optional()
+    .nullish()
     .describe('Maść konia'),
 
   price: z.number().describe('Cena'),
   currency: z.string().default('PLN').describe('Waluta'),
   isAvailable: z.boolean().default(true),
 
-  location: z.string().optional().describe('Ogólna lokalizacja'),
-  country: z.string().optional().describe('Kraj'),
-  region: z.string().optional().describe('Województwo'),
-  city: z.string().optional().describe('Miasto'),
+  location: z.string().nullish().describe('Ogólna lokalizacja'),
+  country: z.string().nullish().describe('Kraj'),
+  region: z.string().nullish().describe('Województwo'),
+  city: z.string().nullish().describe('Miasto'),
   coordinates: z
     .object({
       lat: z.number(),
       lng: z.number(),
     })
-    .optional()
+    .nullish()
     .describe('Współrzędne geograficzne'),
 
   // Horse details
   purpose: z
     .string()
-    .optional()
+    .nullish()
     .describe('Przeznaczenie konia (sportowy/rekreacyjny/roboczy)'),
-  disciplines: z.array(z.string()).optional().describe('Dyscypliny sportowe'),
+  disciplines: z.array(z.string()).nullish().describe('Dyscypliny sportowe'),
   trainingLevel: z
     .union([
       z.literal('Surowy'),
@@ -222,7 +226,7 @@ const horseOfferSchema = z.object({
       z.literal('Klasa C'),
       z.literal('Klasa CC'),
     ])
-    .optional()
+    .nullish()
     .describe('Poziom wyszkolenia'),
   healthStatus: z
     .union([
@@ -232,44 +236,43 @@ const horseOfferSchema = z.object({
       z.literal('niejezdny'),
       z.literal('nieznany'),
     ])
-    .optional()
+    .nullish()
     .describe('Stan zdrowia'),
 
   // Pedigree information
-  father: z.string().optional().describe('Ojciec konia'),
-  mother: z.string().optional().describe('Matka konia'),
-  pedigree: z.string().optional().describe('Rodowód'),
-  registrationNumber: z.string().optional().describe('Numer paszportu'),
+  father: z.string().nullish().describe('Ojciec konia'),
+  mother: z.string().nullish().describe('Matka konia'),
+  pedigree: z.string().nullish().describe('Rodowód'),
+  registrationNumber: z.string().nullish().describe('Numer paszportu'),
 
   // Source and listing information
   sourceUrl: z.string().describe('URL oryginalnego ogłoszenia'),
   sourceName: z.string().default('OLX').describe('Nazwa źródła'),
-  sourceListingId: z.string().optional().describe('ID ogłoszenia w źródle'),
+  sourceListingId: z.string().nullish().describe('ID ogłoszenia w źródle'),
 
   // Media and descriptions
   description: z.string().describe('Szczegółowy opis konia'),
-  imageUrl: z.string().optional().describe('Główne zdjęcie konia'),
+  imageUrl: z.string().nullish().describe('Główne zdjęcie konia'),
 
   // Technical fields
   hasTUV: z.boolean().default(false).describe('Czy ma badania TUV'),
 
   // SEO fields
-  seoTitle: z.string().optional().describe('Tytuł SEO'),
-  seoDescription: z.string().optional().describe('Opis SEO'),
+  seoTitle: z.string().nullish().describe('Tytuł SEO'),
+  seoDescription: z.string().nullish().describe('Opis SEO'),
 
   // Additional extracted data
-  negotiable: z.boolean().optional().describe('Czy cena jest do negocjacji'),
-  datePosted: z.string().optional().describe('Data dodania ogłoszenia'),
+  datePosted: z.string().nullish().describe('Data dodania ogłoszenia'),
   contactInfo: z
     .object({
-      phone: z.string().optional().describe('Numer telefonu'),
-      email: z.string().optional().describe('Adres email'),
-      name: z.string().optional().describe('Imię sprzedawcy'),
+      phone: z.string().nullish().describe('Numer telefonu'),
+      email: z.string().nullish().describe('Adres email'),
+      name: z.string().nullish().describe('Imię sprzedawcy'),
     })
-    .optional()
+    .nullish()
     .describe('Informacje kontaktowe'),
-  features: z.array(z.string()).optional().describe('Dodatkowe cechy konia'),
-  images: z.array(z.string()).optional().describe('URL-e wszystkich zdjęć'),
+  features: z.array(z.string()).nullish().describe('Dodatkowe cechy konia'),
+  images: z.array(z.string()).nullish().describe('URL-e wszystkich zdjęć'),
 })
 
 // Function to extract URLs containing '/oferta/' from markdown content
@@ -289,166 +292,137 @@ function extractOfferUrls(markdownContent: string): string[] {
   return urls
 }
 
-export const fetchTestData = action({
-  args: {
-    url: v.string(),
-  },
-  returns: v.any(),
-  handler: async (ctx, args) => {
-    console.log('Starting Firecrawl scrape for URL:', args.url)
+const schema = z.object({
+  lastPaginationPageNumber: z.number(),
+})
+
+export const scrapeOlxListings = internalAction({
+  handler: async (ctx) => {
     const apiKey = process.env.FIRECRAWL_API_KEY
     if (!apiKey) {
       throw new Error('Missing FIRECRAWL_API_KEY env var in Convex')
     }
 
-    // Validate and clean the URL
-    let cleanUrl = args.url.trim()
+    const firecrawl = new Firecrawl({ apiKey: apiKey })
 
-    // Try to create a URL object to validate the URL format
-    try {
-      const urlObj = new URL(cleanUrl)
-      cleanUrl = urlObj.toString()
-    } catch (error) {
-      throw new Error(`Invalid URL format: ${cleanUrl}`)
-    }
-
-    console.log('Response received, status:', 'preparing request')
-    console.log('Clean URL:', cleanUrl)
-
-    const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        url: cleanUrl,
-        formats: ['markdown'],
-        onlyMainContent: true,
-      }),
-    })
-
-    console.log('Response received, status:', response.status)
-
-    if (!response.ok) {
-      const text = await response.text()
-      console.error('Firecrawl API error:', response.status, text)
-      throw new Error(
-        `Firecrawl request failed: Firecrawl error ${response.status}: ${text}`
+    const listingPagesScrapePromises = Array.from({ length: 9 }, (_, i) =>
+      firecrawl.scrape(
+        `https://www.olx.pl/zwierzeta/konie/?page=${i + 1}&search%5Border%5D=created_at%3Adesc`,
+        {
+          formats: ['markdown'],
+          maxAge: 86400000,
+          onlyMainContent: true,
+          timeout: 120000,
+        }
       )
-    }
+    )
 
-    const data = await response.json()
+    const listingPagesScrapeResults = await Promise.all(
+      listingPagesScrapePromises
+    )
 
-    // Extract URLs containing '/oferta/' from markdown content
-    const offerUrls = extractOfferUrls(data?.data?.markdown || '')
+    const offerUrls = listingPagesScrapeResults.flatMap((result) =>
+      extractOfferUrls(result?.markdown || '')
+    )
 
-    return {
-      originalData: data,
-      offerUrls: offerUrls,
-      totalOffers: offerUrls.length,
+    const batches = Math.ceil(offerUrls.length / 10)
+
+    for (let i = 0; i < batches; i++) {
+      await ctx.scheduler.runAfter(
+        (i + 1) * 60 * 1000,
+        internal.firecrawl.scrapeOlxHorseOffer,
+        {
+          offerUrl: offerUrls.slice(i * 10, (i + 1) * 10),
+        }
+      )
     }
   },
 })
 
-export const scrapeOfferDetails = action({
+export const scrapeOlxHorseOffer = internalAction({
   args: {
-    offerUrl: v.string(),
+    offerUrl: v.array(v.string()),
   },
   handler: async (ctx, args) => {
-    console.log('Starting scrape of individual offer:', args.offerUrl)
+    const existingHorsesPromises: Promise<Doc<'horses'> | null>[] =
+      args.offerUrl.map((offerUrl) =>
+        ctx.runQuery(internal.horses.getBySourceUrl, {
+          sourceUrl: offerUrl,
+        })
+      )
+
+    const existingHorses = await Promise.all(existingHorsesPromises)
+
+    const horsesToScrape = args.offerUrl.filter(
+      (offerUrl) =>
+        !existingHorses.some((horse) => horse?.sourceUrl === offerUrl)
+    )
+
     const apiKey = process.env.FIRECRAWL_API_KEY
     if (!apiKey) {
       throw new Error('Missing FIRECRAWL_API_KEY env var in Convex')
     }
+    const firecrawl = new Firecrawl({ apiKey: apiKey })
 
-    // Validate and clean the URL
-    let cleanUrl = args.offerUrl.trim()
-
-    try {
-      const urlObj = new URL(cleanUrl)
-      cleanUrl = urlObj.toString()
-    } catch (error) {
-      throw new Error(`Invalid URL format: ${cleanUrl}`)
-    }
-
-    console.log('Clean offer URL:', cleanUrl)
-
-    const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        url: cleanUrl,
-        formats: ['markdown'],
-        onlyMainContent: true,
-      }),
+    const scrapePromises = horsesToScrape.map(async (offerUrl) => {
+      try {
+        return await firecrawl.scrape(offerUrl, {
+          formats: ['markdown'],
+          maxAge: 86400000,
+          onlyMainContent: true,
+          timeout: 120000,
+        })
+      } catch (error) {
+        console.error('Error scraping offer:', error)
+        return null
+      }
     })
 
-    console.log('Offer scrape response status:', response.status)
+    const scrapeResults = await Promise.all(scrapePromises)
 
-    if (!response.ok) {
-      const text = await response.text()
-      console.error('Firecrawl offer API error:', response.status, text)
-      throw new Error(
-        `Firecrawl offer request failed: Firecrawl error ${response.status}: ${text}`
-      )
-    }
-
-    const data = await response.json()
-    console.log('Offer scraped successfully')
-
-    return {
-      offerUrl: cleanUrl,
-      markdownContent: data?.data?.markdown || '',
-      metadata: data?.data?.metadata || {},
-      success: true,
-    }
-  },
-})
-
-export const generateStructuredData = action({
-  args: {
-    markdownContent: v.string(),
-    offerUrl: v.string(),
-  },
-  handler: async (ctx, args) => {
-    console.log('Generating structured data for offer:', args.offerUrl)
-
-    const apiKey = process.env.OPENAI_API_KEY
-    if (!apiKey) {
-      throw new Error('Missing OPENAI_API_KEY env var in Convex')
-    }
-
-    try {
-      const { object } = await generateObject({
-        model: openai('gpt-5-mini'),
-        schema: horseOfferSchema,
-        system: `
+    const objectPromises = scrapeResults
+      .filter((v) => v !== null)
+      .map(async (scrapeResult) => {
+        try {
+          return await generateObject({
+            model: openai('gpt-5-mini'),
+            schema: horseOfferSchema,
+            system: `
         Jesteś ekspertem w dziedzinie sprzedaży koni.
         Masz za zadanie wyciągnąć wszystkie istotne informacje zgodnie ze schematem.
         WAŻNE: Jeśli informacja nie jest dostępna, pozostaw pole puste lub użyj wartości domyślnych.
         `,
-        prompt: `
-        Treść ogłoszenia: ${args.markdownContent}
+            prompt: `
+        Treść ogłoszenia: ${scrapeResult?.markdown}
         `,
-        providerOptions: {
-          openai: {
-            structuredOutputs: true,
-          },
-        },
+            providerOptions: {
+              openai: {
+                structuredOutputs: true,
+              },
+            },
+          })
+        } catch (error) {
+          return null
+        }
       })
 
-      console.log('Structured data generated successfully')
-      return {
-        structuredData: object,
-        success: true,
-      }
-    } catch (error) {
-      console.error('Error generating structured data:', error)
-      return { structuredData: null, success: false }
-    }
+    const generatedObjects = await Promise.all(objectPromises)
+
+    const savePromises = generatedObjects
+      .filter((v) => v !== null)
+      .map((v) => {
+        if (v.object.type === 'horse') {
+          return ctx.runMutation(internal.horses.saveFromScraping, {
+            horseData: v.object,
+          })
+        } else {
+          console.log('Skipping non-horse object:', v.object)
+          return null
+        }
+      })
+
+    await Promise.all(savePromises.filter((v) => v !== null))
+
+    console.log('Horses saved to database')
   },
 })

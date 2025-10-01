@@ -33,15 +33,7 @@ const applicationTables = {
     ),
     disciplines: v.optional(v.array(v.string())),
     trainingLevel: v.optional(v.string()),
-    healthStatus: v.optional(
-      v.union(
-        v.literal('zdrowy'),
-        v.literal('chory'),
-        v.literal('kontuzjowany'),
-        v.literal('niejezdny'),
-        v.literal('nieznany')
-      )
-    ),
+    healthStatus: v.optional(v.string()),
     father: v.optional(v.string()),
     mother: v.optional(v.string()),
     pedigree: v.optional(v.string()),
@@ -49,19 +41,12 @@ const applicationTables = {
     seoTitle: v.optional(v.string()),
     seoDescription: v.optional(v.string()),
   })
-    .index('by_owner', ['ownerEmail'])
     .index('by_breed', ['breed'])
     .index('by_price', ['price'])
     .index('by_height', ['height'])
-    .index('by_available', ['isAvailable'])
-    .index('by_region', ['region'])
-    .index('by_city', ['city'])
     .index('by_breed_and_price', ['breed', 'price'])
     .index('by_source', ['sourceName'])
-    .searchIndex('search_description', {
-      searchField: 'description',
-      filterFields: ['breed', 'region', 'isAvailable'],
-    }),
+    .index('by_sourceUrl', ['sourceUrl']),
 
   favorites: defineTable({
     userId: v.string(),

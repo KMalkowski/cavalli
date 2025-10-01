@@ -15,7 +15,6 @@ import type * as favorites from "../favorites.js";
 import type * as firecrawl from "../firecrawl.js";
 import type * as horses from "../horses.js";
 import type * as http from "../http.js";
-import type * as seed from "../seed.js";
 
 import type {
   ApiFromModules,
@@ -39,7 +38,6 @@ declare const fullApi: ApiFromModules<{
   firecrawl: typeof firecrawl;
   horses: typeof horses;
   http: typeof http;
-  seed: typeof seed;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 
