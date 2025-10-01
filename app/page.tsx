@@ -14,8 +14,8 @@ import ResetFiltersButton from '@/components/layout/app-sidebar/reset-filters-bu
 import { FavoritesButton } from '@/components/layout/navbar/favorites-button'
 
 export const metadata = {
-  title: 'Search',
-  description: 'Search for products in the store.',
+  title: 'Look for a horse',
+  description: 'Search for horses on the polish market.',
 }
 
 export default async function SearchPage() {
