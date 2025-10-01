@@ -46,25 +46,40 @@ export function SidebarRangeFilter({
     maxParamKey,
     (integer ? parseAsInteger : parseAsFloat).withDefault(0)
   )
+  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
 
   const onChangeMin = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.trim()
     if (raw === '') {
       setMinValue(null)
+      if (page > 1) {
+        setPage(1)
+      }
       return
     }
     const parsed = Number(raw)
-    if (!Number.isNaN(parsed)) setMinValue(parsed)
+    if (!Number.isNaN(parsed)) {
+      setMinValue(parsed)
+      if (page > 1) {
+        setPage(1)
+      }
+    }
   }
 
   const onChangeMax = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.trim()
     if (raw === '') {
       setMaxValue(0)
+      setPage(1)
       return
     }
     const parsed = Number(raw)
-    if (!Number.isNaN(parsed)) setMaxValue(parsed)
+    if (!Number.isNaN(parsed)) {
+      setMaxValue(parsed)
+      if (page > 1) {
+        setPage(1)
+      }
+    }
   }
 
   const anyActive = minValue !== 0 || maxValue !== 0
@@ -116,6 +131,9 @@ export function SidebarRangeFilter({
                       onClick={() => {
                         setMinValue(0)
                         setMaxValue(0)
+                        if (page > 1) {
+                          setPage(1)
+                        }
                       }}
                     >
                       Wyczyść

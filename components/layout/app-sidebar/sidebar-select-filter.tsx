@@ -1,7 +1,12 @@
 'use client'
 import * as React from 'react'
 import { Check, ChevronRight } from 'lucide-react'
-import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
+import {
+  parseAsArrayOf,
+  parseAsString,
+  parseAsInteger,
+  useQueryState,
+} from 'nuqs'
 
 import {
   Collapsible,
@@ -35,6 +40,7 @@ export function SidebarSelectFilter({
     paramKey,
     parseAsArrayOf(parseAsString).withDefault([])
   )
+  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
   const selectedCount = selected.length
 
   const toggleItem = React.useCallback(
@@ -44,8 +50,11 @@ export function SidebarSelectFilter({
           ? (current ?? []).filter((v) => v !== value)
           : [...(current ?? []), value]
       )
+      if (page > 1) {
+        setPage(1)
+      }
     },
-    [setSelected]
+    [setSelected, setPage, page]
   )
 
   return (
@@ -70,7 +79,12 @@ export function SidebarSelectFilter({
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    onClick={() => setSelected([])}
+                    onClick={() => {
+                      setSelected([])
+                      if (page > 1) {
+                        setPage(1)
+                      }
+                    }}
                     data-active={selectedCount === 0}
                     aria-pressed={selectedCount === 0}
                   >
