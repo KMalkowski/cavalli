@@ -54,14 +54,23 @@ export function ProductDescription({ horse }: { horse: Doc<'horses'> }) {
         />
       ) : null}
       <div className="mb-3 flex gap-2">
-        <HeartButton horseId={horse._id} variant="outline" />
-        <Button asChild className="flex-1">
+        <HeartButton
+          horseId={horse._id}
+          variant="outline"
+          className="shrink-0"
+        />
+        <Button
+          asChild
+          className="max-w-[calc(100%-44px)] min-w-0 flex-1 md:max-w-none"
+        >
           <Link
             href="#details-section"
-            className="flex items-center justify-center gap-2"
+            className="flex items-center justify-center gap-1 sm:gap-2"
           >
-            <ChevronDown className="h-4 w-4" />
-            Szczegóły ogłoszenia
+            <ChevronDown className="h-4 w-4 shrink-0" />
+            <span className="truncate text-sm sm:text-base">
+              Szczegóły ogłoszenia
+            </span>
           </Link>
         </Button>
       </div>
