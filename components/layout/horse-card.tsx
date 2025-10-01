@@ -77,7 +77,7 @@ export function HorseCard({ horse }: { horse: Doc<'horses'> }) {
             <HeartButton horseId={horse._id} className="shrink-0" />
             <Button
               asChild
-              className="max-w-[calc(100% - 44px)] min-w-0 md:flex-1 md:max-w-none"
+              className="max-w-[calc(100% - 44px)] min-w-0 flex-1 md:flex-none md:max-w-none"
             >
               <Link href={`/horse/${horse._id}`}>Szczegóły</Link>
             </Button>
