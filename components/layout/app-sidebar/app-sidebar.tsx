@@ -192,7 +192,7 @@ export const filters = {
   },
   genders: {
     name: 'Płeć',
-    items: ['Klacz', 'Ogier', 'Wałach'],
+    items: ['klacz', 'ogier', 'wałach'],
   },
   healthStatuses: {
     name: 'Stan zdrowia',

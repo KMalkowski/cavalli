@@ -284,7 +284,6 @@ function extractOfferUrls(markdownContent: string): string[] {
   while ((match = urlRegex.exec(markdownContent)) !== null) {
     const url = match[2]
     if (!urls.includes(url)) {
-      // Avoid duplicates
       urls.push(url)
     }
   }
@@ -292,12 +291,12 @@ function extractOfferUrls(markdownContent: string): string[] {
   return urls
 }
 
-const schema = z.object({
-  lastPaginationPageNumber: z.number(),
-})
-
 export const scrapeOlxListings = internalAction({
-  handler: async (ctx) => {
+  args: {
+    startAtPage: v.number(),
+    maxPage: v.number(),
+  },
+  handler: async (ctx, args) => {
     const apiKey = process.env.FIRECRAWL_API_KEY
     if (!apiKey) {
       throw new Error('Missing FIRECRAWL_API_KEY env var in Convex')
@@ -305,16 +304,18 @@ export const scrapeOlxListings = internalAction({
 
     const firecrawl = new Firecrawl({ apiKey: apiKey })
 
-    const listingPagesScrapePromises = Array.from({ length: 9 }, (_, i) =>
-      firecrawl.scrape(
-        `https://www.olx.pl/zwierzeta/konie/?page=${i + 1}&search%5Border%5D=created_at%3Adesc`,
-        {
-          formats: ['markdown'],
-          maxAge: 86400000,
-          onlyMainContent: true,
-          timeout: 120000,
-        }
-      )
+    const listingPagesScrapePromises = Array.from(
+      { length: args.maxPage - args.startAtPage + 1 },
+      (_, i) =>
+        firecrawl.scrape(
+          `https://www.olx.pl/zwierzeta/konie/?page=${i + args.startAtPage}&search%5Border%5D=created_at%3Adesc`,
+          {
+            formats: ['markdown'],
+            maxAge: 86400000,
+            onlyMainContent: true,
+            timeout: 120000,
+          }
+        )
     )
 
     const listingPagesScrapeResults = await Promise.all(
