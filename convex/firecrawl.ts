@@ -305,7 +305,7 @@ export const scrapeOlxListings = internalAction({
     const firecrawl = new Firecrawl({ apiKey: apiKey })
 
     const listingPagesScrapePromises = Array.from(
-      { length: args.maxPage - args.startAtPage + 1 },
+      { length: args.maxPage - args.startAtPage },
       (_, i) =>
         firecrawl.scrape(
           `https://www.olx.pl/zwierzeta/konie/?page=${i + args.startAtPage}&search%5Border%5D=created_at%3Adesc`,
