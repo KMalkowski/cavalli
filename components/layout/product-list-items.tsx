@@ -1,8 +1,11 @@
 'use client'
 
+import { useEffect } from 'react'
 import { Preloaded, usePreloadedQuery, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { HorseCard } from './horse-card'
+import { Button } from '@/components/ui/button'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   parseAsArrayOf,
   parseAsString,
@@ -41,13 +44,21 @@ export default function ProductListItems({
   const [heightMax] = useQueryState('heightMax', parseAsInteger.withDefault(0))
   const [ageMin] = useQueryState('ageMin', parseAsInteger.withDefault(0))
   const [ageMax] = useQueryState('ageMax', parseAsInteger.withDefault(0))
+  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [page])
 
   const preloadedHorsesList = usePreloadedQuery(preloadedHorses)
 
+  const ITEMS_PER_PAGE = 10
+  const cursor = page > 1 ? ((page - 1) * ITEMS_PER_PAGE).toString() : null
+
   const horses = useQuery(api.horses.list, {
     paginationOpts: {
-      numItems: 10,
-      cursor: null,
+      numItems: ITEMS_PER_PAGE,
+      cursor: cursor,
     },
     breeds: breeds.length > 0 ? breeds : undefined,
     genders: genders.length > 0 ? genders : undefined,
@@ -72,11 +83,50 @@ export default function ProductListItems({
     )
   }
 
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1)
+    }
+  }
+
+  const handleNextPage = () => {
+    if (!horses.isDone) {
+      setPage(page + 1)
+    }
+  }
+
   return (
     <>
       {horses.page.map((horse) => (
         <HorseCard horse={horse} key={horse._id} />
       ))}
+
+      {/* Pagination Controls */}
+      {(page > 1 || !horses.isDone) && (
+        <div className="mt-8 flex items-center justify-center gap-4">
+          <Button
+            variant="outline"
+            onClick={handlePreviousPage}
+            disabled={page <= 1}
+            className="flex items-center gap-2"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Previous
+          </Button>
+
+          <span className="text-muted-foreground text-sm">Page {page}</span>
+
+          <Button
+            variant="outline"
+            onClick={handleNextPage}
+            disabled={horses.isDone}
+            className="flex items-center gap-2"
+          >
+            Next
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </>
   )
 }
